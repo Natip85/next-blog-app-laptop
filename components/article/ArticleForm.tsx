@@ -130,7 +130,7 @@ const ArticleForm = ({ article }: ArticleFormProps) => {
         </div>
       </div>
       {!article ? (
-        <>
+        <div className="p-4">
           <Suspense fallback={`Loading...`}>
             <ArticleEditor
               data={editorData}
@@ -138,11 +138,11 @@ const ArticleForm = ({ article }: ArticleFormProps) => {
               editorblock="editorjs-container"
             />
           </Suspense>
-        </>
+        </div>
       ) : (
-        <>
+        <div className="p-4">
           <div id="edit-editor" />
-        </>
+        </div>
       )}
     </div>
   );

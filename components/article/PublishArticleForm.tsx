@@ -76,7 +76,7 @@ const PublishArticleForm = ({ article }: PublishArticleFormProps) => {
     });
   }
   return (
-    <div className="flex justify-between gap-5 p-10">
+    <div className="flex flex-col sm:flex-row justify-between gap-5 p-10">
       <div className="flex-1 flex flex-col gap-5">
         <div className="font-bold">Article preview</div>
         <div className="max-h-[500px] overflow-y-auto">
