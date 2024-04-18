@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import UserButton from "../auth/UserButton";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import PublishArticleForm from "./PublishArticleForm";
+import { updateArticle } from "@/actions/updateArticle";
 
 const ArticleEditor = dynamic(() => import("@/components/article/Editor"), {
   ssr: false,
@@ -51,6 +52,8 @@ const ArticleForm = ({ article }: ArticleFormProps) => {
           blocks: convertFromJSON(article?.editorData.blocks),
         };
   });
+  console.log({ editEditorData });
+
   const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
@@ -59,14 +62,12 @@ const ArticleForm = ({ article }: ArticleFormProps) => {
         const editor = new EditorJS({
           holder: "edit-editor",
           tools: EditorTools,
-          data: { ...editEditorData } || {
-            time: new Date().getTime(),
-            blocks: convertFromJSON(article.editorData.blocks),
-          },
+          data: { ...editEditorData },
           async onChange(api, event) {
             const data = await api.saver.save();
             let logDataString = JSON.stringify(data);
             localStorage.setItem("edit-document", logDataString);
+            setEditEditorData(data);
           },
         });
         ref.current = editor;
@@ -76,6 +77,7 @@ const ArticleForm = ({ article }: ArticleFormProps) => {
 
   const handleSaveEditor = () => {
     if (!article) {
+      //CREATE
       startTransition(() => {
         localStorage.removeItem("document");
         const dataToCreate = {
@@ -92,6 +94,20 @@ const ArticleForm = ({ article }: ArticleFormProps) => {
       });
     } else {
       //UPDATE
+      startTransition(() => {
+        localStorage.removeItem("edit-document");
+        const dataToCreate = {
+          version: editEditorData.version ?? null,
+          time: editEditorData.time ?? null,
+          blocks: convertToJSON(editEditorData.blocks),
+        };
+        updateArticle(article.id, dataToCreate).then((res) => {
+          if (res.success) {
+            toast.success("Draft successfully saved");
+            router.push("/stories");
+          }
+        });
+      });
     }
   };
 
