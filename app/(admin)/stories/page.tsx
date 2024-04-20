@@ -1,14 +1,10 @@
 import { getArticles } from "@/actions/getArticles";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
-import moment from "moment";
 import StoriesList from "@/components/article/StoriesList";
 
 const StoriesPage = async () => {
   const articles = await getArticles();
-  console.log(articles?.draftArticles);
 
   return (
     <div className="container max-w-7xl flex justify-between gap-10">
@@ -27,7 +23,7 @@ const StoriesPage = async () => {
         <StoriesList articles={articles} />
       </div>
       <div className="hidden sm:flex flex-col h-screen flex-1 border-l p-5">
-        SEcond part
+        Second part
       </div>
     </div>
   );

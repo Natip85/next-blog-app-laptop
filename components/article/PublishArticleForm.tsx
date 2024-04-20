@@ -30,6 +30,7 @@ const PublishArticleForm = ({ article }: PublishArticleFormProps) => {
   const [isPending, startTransition] = useTransition();
   const [topic, setTopic] = useState<string | undefined>();
   const [error, setError] = useState<string | undefined>();
+  console.log("this art", article);
 
   useEffect(() => {
     if (topic && topic?.length < 2) {
@@ -46,7 +47,7 @@ const PublishArticleForm = ({ article }: PublishArticleFormProps) => {
           tools: EditorTools,
           data: { ...editEditorData } || {
             time: new Date().getTime(),
-            blocks: convertFromJSON(article.editorData?.blocks),
+            blocks: convertFromJSON(editEditorData),
           },
         });
         ref.current = editor;
@@ -54,7 +55,7 @@ const PublishArticleForm = ({ article }: PublishArticleFormProps) => {
     }
   }, [article, editEditorData, topic]);
 
-  function publishArticle() {
+  function handlePublishArticle() {
     startTransition(() => {
       if (!topic || topic.length < 2) {
         setError("Topic required (Min 2 characters)");
@@ -65,7 +66,7 @@ const PublishArticleForm = ({ article }: PublishArticleFormProps) => {
       const dataToCreate = {
         version: article.version ?? null,
         time: article.time ?? null,
-        blocks: convertToJSON(article.blocks),
+        blocks: convertToJSON(article?.blocks),
       };
       createArticle(dataToCreate, true, topic).then((res) => {
         if (res.success) {
@@ -75,6 +76,7 @@ const PublishArticleForm = ({ article }: PublishArticleFormProps) => {
       });
     });
   }
+  function publishDraft() {}
   return (
     <div className="flex flex-col sm:flex-row justify-between gap-5 p-10">
       <div className="flex-1 flex flex-col gap-5">
@@ -100,7 +102,7 @@ const PublishArticleForm = ({ article }: PublishArticleFormProps) => {
         </div>
         <div>
           <Button
-            onClick={publishArticle}
+            onClick={handlePublishArticle}
             disabled={isPending}
             size={"sm"}
             className="bg-green-600 rounded-3xl hover:bg-green-700"

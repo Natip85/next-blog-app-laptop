@@ -6,10 +6,7 @@ export const getArticles = async () => {
 
     if (!articles) return null;
 
-    const publishedArticles = articles.filter((article) => article.isPublished);
-    const draftArticles = articles.filter((article) => !article.isPublished);
-    const allArticles = { publishedArticles, draftArticles };
-    return allArticles;
+    return articles;
   } catch (error: any) {
     throw new Error(error);
   }

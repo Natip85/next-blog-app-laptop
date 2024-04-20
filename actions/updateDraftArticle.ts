@@ -2,7 +2,7 @@
 import db from "@/db/db";
 import { currentUser } from "@/lib/auth";
 
-export const updateArticle = async (articleId: string, values: any) => {
+export const updateDraftArticle = async (articleId: string, values: any) => {
   const user = await currentUser();
   if (!user) {
     return { error: "No user found" };

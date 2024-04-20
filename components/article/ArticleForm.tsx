@@ -13,12 +13,12 @@ import { toast } from "sonner";
 import UserButton from "../auth/UserButton";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import PublishArticleForm from "./PublishArticleForm";
-import { updateArticle } from "@/actions/updateArticle";
+import { updateDraftArticle } from "@/actions/updateDraftArticle";
 
 const ArticleEditor = dynamic(() => import("@/components/article/Editor"), {
   ssr: false,
 });
-export function convertToJSON(blocks: OutputBlockData[]) {
+export function convertToJSON(blocks: any[]) {
   return blocks.map((block) => ({
     id: block.id,
     type: block.type,
@@ -62,7 +62,7 @@ const ArticleForm = ({ article }: ArticleFormProps) => {
         const editor = new EditorJS({
           holder: "edit-editor",
           tools: EditorTools,
-          data: { ...editEditorData },
+          data: editEditorData,
           async onChange(api, event) {
             const data = await api.saver.save();
             let logDataString = JSON.stringify(data);
@@ -79,7 +79,6 @@ const ArticleForm = ({ article }: ArticleFormProps) => {
     if (!article) {
       //CREATE
       startTransition(() => {
-        localStorage.removeItem("document");
         const dataToCreate = {
           version: editorData.version ?? null,
           time: editorData.time ?? null,
@@ -89,22 +88,23 @@ const ArticleForm = ({ article }: ArticleFormProps) => {
           if (res.success) {
             toast.success("Article successfully created");
             router.push("/stories");
+            localStorage.removeItem("document");
           }
         });
       });
     } else {
       //UPDATE
       startTransition(() => {
-        localStorage.removeItem("edit-document");
         const dataToCreate = {
           version: editEditorData.version ?? null,
           time: editEditorData.time ?? null,
           blocks: convertToJSON(editEditorData.blocks),
         };
-        updateArticle(article.id, dataToCreate).then((res) => {
+        updateDraftArticle(article.id, dataToCreate).then((res) => {
           if (res.success) {
-            toast.success("Draft successfully saved");
-            router.push("/stories");
+            toast.success("Article successfully saved");
+            router.push(`/stories`);
+            localStorage.removeItem("edit-document");
           }
         });
       });
@@ -129,6 +129,7 @@ const ArticleForm = ({ article }: ArticleFormProps) => {
           >
             Save as draft
           </Button>
+
           <Dialog>
             <DialogTrigger asChild>
               <Button
@@ -142,6 +143,7 @@ const ArticleForm = ({ article }: ArticleFormProps) => {
               <PublishArticleForm article={editorData} />
             </DialogContent>
           </Dialog>
+
           <UserButton />
         </div>
       </div>
