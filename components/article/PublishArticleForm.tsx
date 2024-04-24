@@ -10,27 +10,37 @@ import { createArticle } from "@/actions/createArticle";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { publishDraftArticle } from "./publishDraftArticle";
 
 interface PublishArticleFormProps {
+  draftEditorData: any;
+  publishEditorData: any;
   article: any;
 }
-const PublishArticleForm = ({ article }: PublishArticleFormProps) => {
+const PublishArticleForm = ({
+  draftEditorData,
+  article,
+  publishEditorData,
+}: PublishArticleFormProps) => {
   const user = useCurrentUser();
   const router = useRouter();
   const ref = useRef<EditorJS | null>(null);
-  const [editEditorData, setEditEditorData] = useState<any>(() => {
+  const [draftData, setDraftData] = useState<any>(() => {
     const storedData = localStorage.getItem("document");
     return storedData
       ? JSON.parse(storedData)
       : {
           time: new Date().getTime(),
-          blocks: convertFromJSON(article?.editorData?.blocks),
+          blocks: convertFromJSON(draftEditorData?.editorData?.blocks),
         };
   });
+
   const [isPending, startTransition] = useTransition();
   const [topic, setTopic] = useState<string | undefined>();
   const [error, setError] = useState<string | undefined>();
-  console.log("this art", article);
+  console.log("draftEditorData>>>", draftEditorData);
+  console.log("publishEditorData>>>", publishEditorData);
+  console.log("article>>>", article);
 
   useEffect(() => {
     if (topic && topic?.length < 2) {
@@ -45,15 +55,23 @@ const PublishArticleForm = ({ article }: PublishArticleFormProps) => {
           minHeight: 100,
           holder: "publishing-editor",
           tools: EditorTools,
-          data: { ...editEditorData } || {
-            time: new Date().getTime(),
-            blocks: convertFromJSON(editEditorData),
-          },
+          data: publishEditorData,
+        });
+        ref.current = editor;
+      }
+    } else {
+      if (!ref.current) {
+        const editor = new EditorJS({
+          readOnly: true,
+          minHeight: 100,
+          holder: "publishing-editor",
+          tools: EditorTools,
+          data: draftEditorData,
         });
         ref.current = editor;
       }
     }
-  }, [article, editEditorData, topic]);
+  }, [topic, article, draftEditorData, publishEditorData]);
 
   function handlePublishArticle() {
     startTransition(() => {
@@ -61,22 +79,37 @@ const PublishArticleForm = ({ article }: PublishArticleFormProps) => {
         setError("Topic required (Min 2 characters)");
         return;
       }
-
-      localStorage.removeItem("document");
-      const dataToCreate = {
-        version: article.version ?? null,
-        time: article.time ?? null,
-        blocks: convertToJSON(article?.blocks),
-      };
-      createArticle(dataToCreate, true, topic).then((res) => {
-        if (res.success) {
-          toast.success("Article successfully created");
-          router.push("/stories");
-        }
-      });
+      if (article) {
+        localStorage.removeItem("edit-document");
+        const dataToCreate = {
+          version: publishEditorData.version ?? null,
+          time: publishEditorData.time ?? null,
+          blocks: convertToJSON(publishEditorData?.blocks),
+        };
+        const topicId = article ? article.categoryId : undefined;
+        publishDraftArticle(article.id, dataToCreate, topicId, topic).then(
+          (res) => {
+            console.log(res);
+            toast.success("Article successfully published");
+            router.push("/stories");
+          }
+        );
+      } else {
+        localStorage.removeItem("document");
+        const dataToCreate = {
+          version: draftEditorData.version ?? null,
+          time: draftEditorData.time ?? null,
+          blocks: convertToJSON(draftEditorData?.blocks),
+        };
+        createArticle(dataToCreate, true, topic).then((res) => {
+          if (res.success) {
+            toast.success("Article successfully created");
+            router.push("/stories");
+          }
+        });
+      }
     });
   }
-  function publishDraft() {}
   return (
     <div className="flex flex-col sm:flex-row justify-between gap-5 p-10">
       <div className="flex-1 flex flex-col gap-5">

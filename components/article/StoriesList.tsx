@@ -19,7 +19,6 @@ interface StoriesListProps {
 }
 
 const StoriesList = ({ articles }: StoriesListProps) => {
-  console.log("frgg", articles);
   const [drafts, setDrafts] = useState<Article[]>();
   const [published, setPublished] = useState<Article[]>();
   useEffect(() => {
