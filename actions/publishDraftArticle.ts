@@ -9,10 +9,6 @@ export const publishDraftArticle = async (
   topicId: string | undefined,
   topic: string | undefined
 ) => {
-  console.log("server articl Id", articleId);
-  console.log("server values", values);
-  console.log("topic id>>", topicId);
-
   const user = await currentUser();
 
   if (!user) {

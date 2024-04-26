@@ -178,7 +178,7 @@ const ProfilePage = () => {
                         </DialogClose>
                         <Button
                           onClick={() => handleDeleteAccount(user?.id!)}
-                          className="bg-destructive text-white rounded-3xl hover:bg-red-700"
+                          className="bg-destructive text-white hover:bg-red-700"
                         >
                           Delete account
                         </Button>

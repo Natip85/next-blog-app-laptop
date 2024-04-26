@@ -9,9 +9,9 @@ export const getArticleById = async (articleId: string) => {
       where: {
         id: articleId === "new" ? newArticleId : articleId,
       },
-      // include: {
-      //   rooms: true,
-      // },
+      include: {
+        user: true,
+      },
     });
 
     if (!article) return null;

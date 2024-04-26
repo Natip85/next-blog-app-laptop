@@ -1,10 +1,10 @@
-import { getArticles } from "@/actions/getArticles";
+import { getArticlesById } from "@/actions/getArticlesById";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import StoriesList from "@/components/article/StoriesList";
 
 const StoriesPage = async () => {
-  const articles = await getArticles();
+  const articles = await getArticlesById();
 
   return (
     <div className="container max-w-7xl flex justify-between gap-10">

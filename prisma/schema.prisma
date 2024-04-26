@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -97,14 +91,11 @@ model TwoFactorConfirmation {
 
 model Article {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  // title       String
-  // description String
-  // image       String?
   editorData    Json
   isPublished Boolean @default(false)
   views       Int      @default(0)
   createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  updatedAt   DateTime @updatedAt @default(now())
   readTime    Int 
 
   categoryId  String?   @db.ObjectId
@@ -147,9 +138,4 @@ model Follow {
   followedBy  User      @relation("UserFollowers", fields: [followedById], references: [id])
 }
 
-
-// type OutputData  {
-//   version String?
-//   time Int?
-//   blocks Json?
-// } 
+ 
