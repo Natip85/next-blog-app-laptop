@@ -54,7 +54,6 @@ export type ArticleWithUser = any & {
   user: User;
 };
 const ArticleDetailsClient = ({ article }: ArticleDetailsClientProps) => {
-  console.log("article>>>", article);
   const ref = useRef<EditorJS | null>(null);
   const [editEditorData, setEditEditorData] = useState<any>(() => {
     return {
