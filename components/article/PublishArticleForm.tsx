@@ -11,6 +11,8 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { publishDraftArticle } from "../../actions/publishDraftArticle";
+import { Textarea } from "../ui/textarea";
+import { Separator } from "../ui/separator";
 
 interface PublishArticleFormProps {
   draftEditorData: any;
@@ -37,6 +39,7 @@ const PublishArticleForm = ({
 
   const [isPending, startTransition] = useTransition();
   const [topic, setTopic] = useState<string | undefined>();
+  const [prevSubtitle, setPrevSubtitle] = useState<string | undefined>();
   const [error, setError] = useState<string | undefined>();
 
   useEffect(() => {
@@ -84,12 +87,16 @@ const PublishArticleForm = ({
           blocks: convertToJSON(publishEditorData?.blocks),
         };
         const topicId = article ? article.categoryId : undefined;
-        publishDraftArticle(article.id, dataToCreate, topicId, topic).then(
-          (res) => {
-            toast.success("Article successfully published");
-            router.push(`/article-details/${res.success?.id}`);
-          }
-        );
+        publishDraftArticle(
+          article.id,
+          dataToCreate,
+          topicId,
+          topic,
+          prevSubtitle
+        ).then((res) => {
+          toast.success("Article successfully published");
+          router.push(`/article-details/${res.success?.id}`);
+        });
       } else {
         localStorage.removeItem("document");
         const dataToCreate = {
@@ -97,7 +104,7 @@ const PublishArticleForm = ({
           time: draftEditorData.time ?? null,
           blocks: convertToJSON(draftEditorData?.blocks),
         };
-        createArticle(dataToCreate, true, topic).then((res) => {
+        createArticle(dataToCreate, true, topic, prevSubtitle).then((res) => {
           if (res.success) {
             toast.success("Article successfully created");
             router.push(`/article-details/${res.success?.id}`);
@@ -112,6 +119,22 @@ const PublishArticleForm = ({
         <div className="font-bold">Article preview</div>
         <div className="max-h-[500px] overflow-x-auto sm:overflow-y-auto">
           <div id="publishing-editor" />
+        </div>
+        <div className="flex flex-col gap-3">
+          <Separator />
+          <Textarea
+            id="preview-subtitle"
+            placeholder="Write a preview subtitle..."
+            onChange={(e) => setPrevSubtitle(e.target.value)}
+          />
+          <label
+            htmlFor="preview-subtitle"
+            className="text-xs text-muted-foreground"
+          >
+            <span className="font-bold">Note:</span> Changes here will affect
+            how your story appears in public places like Medium’s homepage and
+            in subscribers’ inboxes — not the contents of the story itself.
+          </label>
         </div>
       </div>
       <div className="flex flex-1 flex-col gap-10">

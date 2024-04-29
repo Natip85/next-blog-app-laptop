@@ -7,7 +7,8 @@ export const publishDraftArticle = async (
   articleId: string,
   values: any,
   topicId: string | undefined,
-  topic: string | undefined
+  topic: string | undefined,
+  previewSubtitle: string | undefined
 ) => {
   const user = await currentUser();
 
@@ -26,6 +27,7 @@ export const publishDraftArticle = async (
       data: {
         editorData: { ...values },
         isPublished: true,
+        previewSubtitle: previewSubtitle,
       },
     });
     return { success: updatedArticle };
@@ -45,6 +47,7 @@ export const publishDraftArticle = async (
           editorData: { ...values },
           isPublished: true,
           categoryId: existingCategory.id,
+          previewSubtitle: previewSubtitle,
         },
       });
       return { success: updatedArticle };
@@ -62,6 +65,7 @@ export const publishDraftArticle = async (
           editorData: { ...values },
           isPublished: true,
           categoryId: newCategory.id,
+          previewSubtitle: previewSubtitle,
         },
       });
       return { success: updatedArticle };

@@ -5,7 +5,8 @@ import { currentUser } from "@/lib/auth";
 export const createArticle = async (
   values: any,
   asPublished: boolean,
-  topic: string | undefined
+  topic: string | undefined,
+  previewSubtitle: string | undefined
 ) => {
   const user = await currentUser();
   if (!user) {
@@ -20,6 +21,7 @@ export const createArticle = async (
         userId: user.id,
         categoryId: undefined,
         isPublished: asPublished,
+        previewSubtitle: previewSubtitle,
       },
     });
     return { success: article };
@@ -38,6 +40,7 @@ export const createArticle = async (
         userId: user.id,
         categoryId: newCategory.id,
         isPublished: asPublished,
+        previewSubtitle: previewSubtitle,
       },
     });
     return { success: article };

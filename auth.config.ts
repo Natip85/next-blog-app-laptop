@@ -16,7 +16,7 @@ import { getAccountByUserId } from "./data/account";
 import { getTwoFactorConfirmationByUserId } from "./data/twoFactorConfirmation";
 
 export const authConfig = {
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.AUTH_SECRET,
   pages: {
     signIn: "/auth/login",
     error: "/auth/error",
