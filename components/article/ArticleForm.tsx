@@ -84,7 +84,7 @@ const ArticleForm = ({ article }: ArticleFormProps) => {
           time: draftEditorData.time ?? null,
           blocks: convertToJSON(draftEditorData.blocks),
         };
-        createArticle(dataToCreate, false, "").then((res) => {
+        createArticle(dataToCreate, false, "", undefined).then((res) => {
           if (res.success) {
             localStorage.removeItem("document");
             toast.success("Article successfully created");
