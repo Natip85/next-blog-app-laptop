@@ -4,25 +4,7 @@ import EditorJS from "@editorjs/editorjs";
 import { EditorTools } from "@/lib/editorTools";
 import { convertFromJSON } from "./ArticleForm";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import {
-  Cloud,
-  CreditCard,
-  Github,
-  Keyboard,
-  LifeBuoy,
-  LogOut,
-  Mail,
-  MessageSquare,
-  MoreHorizontal,
-  Paperclip,
-  Plus,
-  PlusCircle,
-  Settings,
-  Share,
-  User2,
-  UserPlus,
-  Users,
-} from "lucide-react";
+import { MoreHorizontal, User2 } from "lucide-react";
 import { User } from "@prisma/client";
 import moment from "moment";
 import { Button } from "../ui/button";
@@ -37,15 +19,18 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import {
+  Sheet,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+} from "../ui/sheet";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { Textarea } from "../ui/textarea";
 
 interface ArticleDetailsClientProps {
   article: ArticleWithUser | null;
@@ -54,7 +39,10 @@ export type ArticleWithUser = any & {
   user: User;
 };
 const ArticleDetailsClient = ({ article }: ArticleDetailsClientProps) => {
+  const user = useCurrentUser();
   const ref = useRef<EditorJS | null>(null);
+  const [open, setOpen] = useState(false);
+  const [response, setResponse] = useState<string | undefined>();
   const [editEditorData, setEditEditorData] = useState<any>(() => {
     return {
       time: new Date().getTime(),
@@ -76,6 +64,7 @@ const ArticleDetailsClient = ({ article }: ArticleDetailsClientProps) => {
   }, [article, editEditorData]);
   return (
     <div className="container max-w-3xl py-10">
+      {/* <div className="py-5 font-semibold">{article.previewSubtitle}</div> */}
       <div>
         <div className="flex items-center gap-3">
           <div>
@@ -123,8 +112,12 @@ const ArticleDetailsClient = ({ article }: ArticleDetailsClientProps) => {
           </TooltipProvider>
           <TooltipProvider>
             <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant={"ghost"} size={"xs"}>
+              <TooltipTrigger asChild className="flex items-center">
+                <Button
+                  variant={"ghost"}
+                  size={"xs"}
+                  onClick={() => setOpen(!open)}
+                >
                   <svg width="24" height="24" viewBox="0 0 24 24">
                     <path d="M18 16.8a7.14 7.14 0 0 0 2.24-5.32c0-4.12-3.53-7.48-8.05-7.48C7.67 4 4 7.36 4 11.48c0 4.13 3.67 7.48 8.2 7.48a8.9 8.9 0 0 0 2.38-.32c.23.2.48.39.75.56 1.06.69 2.2 1.04 3.4 1.04.22 0 .4-.11.48-.29a.5.5 0 0 0-.04-.52 6.4 6.4 0 0 1-1.16-2.65v.02zm-3.12 1.06l-.06-.22-.32.1a8 8 0 0 1-2.3.33c-4.03 0-7.3-2.96-7.3-6.59S8.17 4.9 12.2 4.9c4 0 7.1 2.96 7.1 6.6 0 1.8-.6 3.47-2.02 4.72l-.2.16v.26l.02.3a6.74 6.74 0 0 0 .88 2.4 5.27 5.27 0 0 1-2.17-.86c-.28-.17-.72-.38-.94-.59l.01-.02z"></path>
                   </svg>
@@ -137,6 +130,39 @@ const ArticleDetailsClient = ({ article }: ArticleDetailsClientProps) => {
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
+          <Sheet open={open} onOpenChange={setOpen}>
+            <SheetContent className="flex flex-col gap-5">
+              <SheetHeader>
+                <SheetTitle>Responses (0)</SheetTitle>
+              </SheetHeader>
+              <div className="p-4 shadow-xl rounded-md flex flex-col gap-3 border-[0.5px] border-gray-100">
+                <div className="flex items-center gap-5">
+                  <Avatar>
+                    <AvatarImage src={user?.image} />
+                    <AvatarFallback>
+                      <User2 />
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className="text-sm">{user?.name}</span>
+                </div>
+                <div>
+                  <Textarea
+                    placeholder="What are your thoughts?"
+                    className="border-none ring-offset-0 focus-visible:ring-0"
+                    onChange={(e) => setResponse(e.target.value)}
+                  />
+                </div>
+                <div className="flex items-center justify-end gap-3">
+                  <Button
+                    disabled={!response}
+                    className="bg-green-600 rounded-3xl hover:bg-green-700"
+                  >
+                    Respond
+                  </Button>
+                </div>
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
         <div className="flex items-center gap-3">
           <TooltipProvider>
