@@ -42,7 +42,6 @@ const ArticleForm = ({ article }: ArticleFormProps) => {
     const storedData = localStorage.getItem("document");
     return storedData ? JSON.parse(storedData) : INITIAL_DATA;
   });
-  console.log(draftEditorData);
 
   const [editEditorData, setEditEditorData] = useState<any>(() => {
     const storedData = localStorage.getItem("edit-document");

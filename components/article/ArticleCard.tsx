@@ -25,8 +25,6 @@ interface ArticleCardProps {
   articles: any;
 }
 const ArticleCard = ({ articles }: ArticleCardProps) => {
-  console.log("These articles>>>", articles);
-
   return (
     <div className="flex flex-col gap-3">
       {articles.map((article: any) => (

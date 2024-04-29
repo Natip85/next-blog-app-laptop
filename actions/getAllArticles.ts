@@ -4,7 +4,7 @@ import { currentUser } from "@/lib/auth";
 
 export const getAllArticles = async (page: number) => {
   try {
-    const perPage = 3;
+    const perPage = 10;
     const user = await currentUser();
     if (!user) return null;
     const offset = (page - 1) * perPage;

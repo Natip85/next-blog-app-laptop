@@ -11,6 +11,6 @@ export const getArticlesById = async () => {
     if (!articles) return null;
     return articles;
   } catch (error: any) {
-    throw new Error(error);
+    return { error: error.message };
   }
 };

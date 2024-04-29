@@ -21,7 +21,7 @@ export async function DELETE(
     });
     return NextResponse.json(user);
   } catch (error) {
-    console.log("Error at /api/hotel/hotelId DELETE", error);
+    console.log("Error at /api/auth/delete/userId DELETE", error);
     return new NextResponse("Internal server error", { status: 500 });
   }
 }

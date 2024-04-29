@@ -11,6 +11,7 @@ export const getArticleById = async (articleId: string) => {
       },
       include: {
         user: true,
+        comments: true,
       },
     });
 

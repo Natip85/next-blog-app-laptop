@@ -10,7 +10,15 @@ const ArticlesList = () => {
   const [articles, setArticles] = useState<any[]>([]);
   const [page, setPage] = useState(1);
   const { ref, inView } = useInView();
+  function shuffleArray(array: any) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
 
+  const shuffledProducts = shuffleArray(articles);
   const loadMoreArticles = async () => {
     const nextPage = page + 1;
     const newArticles = await getAllArticles(nextPage);
@@ -21,14 +29,12 @@ const ArticlesList = () => {
   };
   useEffect(() => {
     if (inView) {
-      console.log("triggered");
-
       loadMoreArticles();
     }
   }, [inView]);
   return (
     <>
-      <ArticleCard articles={articles} />
+      <ArticleCard articles={shuffledProducts} />
       <div className="flex justify-center items-center p-4" ref={ref}>
         <BeatLoader />
       </div>
