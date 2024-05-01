@@ -16,7 +16,7 @@ export const likeArticle = async (userId: string, articleId: string) => {
       },
     });
     if (existingLike) {
-      await db.like.update({
+      const usersLikedArticle = await db.like.update({
         where: {
           id: existingLike.id,
         },
@@ -24,16 +24,16 @@ export const likeArticle = async (userId: string, articleId: string) => {
           likeCount: existingLike.likeCount + 1,
         },
       });
-      return { success: "liked" };
+      return { success: usersLikedArticle.likeCount };
     } else {
-      await db.like.create({
+      const newLike = await db.like.create({
         data: {
           userId: userId,
           articleId: articleId,
         },
       });
 
-      return { success: "liked!" };
+      return { success: newLike.likeCount };
     }
   } catch (error) {
     return { error: "Failed to like article" };

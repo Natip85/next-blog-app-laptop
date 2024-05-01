@@ -21,6 +21,7 @@ export default async function RootLayout({
     <SessionProvider session={session}>
       <html lang="en">
         <body
+          suppressHydrationWarning
           className={cn(
             "bg-background min-h-screen font-sans antialiased",
             inter.variable
