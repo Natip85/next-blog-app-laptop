@@ -196,7 +196,6 @@ const ArticleDetailsClient = ({
     }, 1000);
   };
   const handleCopyLink = () => {
-    console.log(pathname);
     const fullURL = window.location.origin + pathname;
     navigator.clipboard
       .writeText(fullURL)
