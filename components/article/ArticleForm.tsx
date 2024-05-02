@@ -13,6 +13,10 @@ import UserButton from "../auth/UserButton";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import PublishArticleForm from "./PublishArticleForm";
 import { updateArticle } from "@/actions/updateArticle";
+import { UploadButton } from "@/components/uploadthing";
+import { UserImage } from "../auth/ProfileEditForm";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { User2 } from "lucide-react";
 
 const ArticleEditor = dynamic(() => import("@/components/article/Editor"), {
   ssr: false,
@@ -52,6 +56,17 @@ const ArticleForm = ({ article }: ArticleFormProps) => {
           blocks: convertFromJSON(article?.editorData.blocks),
         };
   });
+  const [images, setImages] = useState<UserImage[]>([
+    {
+      key: "",
+      name: "",
+      url: article?.image || "",
+      size: 0,
+      serverData: { uploadedBy: "" },
+    },
+  ]);
+  const [isImageLoading, setIsImageLoading] = useState(false);
+  console.log({ images });
 
   const [isPending, startTransition] = useTransition();
 
@@ -83,14 +98,17 @@ const ArticleForm = ({ article }: ArticleFormProps) => {
           time: draftEditorData.time ?? null,
           blocks: convertToJSON(draftEditorData.blocks),
         };
-        createArticle(dataToCreate, false, "", undefined).then((res) => {
-          if (res.success) {
-            localStorage.removeItem("document");
-            toast.success("Article successfully created");
-            router.push("/stories");
-            router.refresh();
+        const isImage = images[0].url ? images[0].url : undefined;
+        createArticle(dataToCreate, false, "", undefined, isImage).then(
+          (res) => {
+            if (res.success) {
+              localStorage.removeItem("document");
+              toast.success("Article successfully created");
+              router.push("/stories");
+              router.refresh();
+            }
           }
-        });
+        );
       });
     } else {
       //UPDATE
@@ -100,7 +118,8 @@ const ArticleForm = ({ article }: ArticleFormProps) => {
           time: editEditorData.time ?? null,
           blocks: convertToJSON(editEditorData.blocks),
         };
-        updateArticle(article.id, dataToCreate).then((res) => {
+        const isImage = images[0].url ? images[0].url : undefined;
+        updateArticle(article.id, dataToCreate, isImage).then((res) => {
           if (res.success) {
             localStorage.removeItem("edit-document");
             toast.success("Article successfully saved");
@@ -131,11 +150,12 @@ const ArticleForm = ({ article }: ArticleFormProps) => {
                   Publish
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-w-5xl p-5">
+              <DialogContent className="max-w-5xl p-5 overflow-y-auto">
                 <PublishArticleForm
                   draftEditorData={draftEditorData}
                   publishEditorData={editEditorData}
                   article={article}
+                  image={images[0].url}
                 />
               </DialogContent>
             </Dialog>
@@ -164,6 +184,7 @@ const ArticleForm = ({ article }: ArticleFormProps) => {
                     draftEditorData={draftEditorData}
                     publishEditorData={editEditorData}
                     article={article}
+                    image={images[0].url}
                   />
                 </DialogContent>
               </Dialog>
@@ -172,6 +193,48 @@ const ArticleForm = ({ article }: ArticleFormProps) => {
 
           <UserButton />
         </div>
+      </div>
+      <div>
+        <UploadButton
+          className="ut-button:bg-transparent ut-button:h-[30px] ut-button:w-[75px] ut-button:text-green-600"
+          endpoint="imageUploader"
+          content={{
+            button({ ready }) {
+              if (ready) return "Update";
+              return "Getting ready...";
+            },
+          }}
+          appearance={{
+            allowedContent: "hidden",
+          }}
+          onClientUploadComplete={(res) => {
+            console.log("IMAGE_RES>>>>", res);
+
+            setImages(res);
+            setIsImageLoading(false);
+            toast("Profile image upload complete");
+          }}
+          onUploadProgress={() => {
+            setIsImageLoading(true);
+          }}
+          onUploadError={(error: Error) => {
+            toast.error(error.message);
+          }}
+        />
+        {images ? (
+          <Avatar className="size-28">
+            <AvatarImage src={images[0].url || ""} />
+            <AvatarFallback className="bg-amber-500">
+              <User2 className="text-white" />
+            </AvatarFallback>
+          </Avatar>
+        ) : (
+          <Avatar className="size-28">
+            <AvatarFallback className="bg-amber-500">
+              <User2 className="text-white" />
+            </AvatarFallback>
+          </Avatar>
+        )}
       </div>
       {!article ? (
         <div className="p-4">

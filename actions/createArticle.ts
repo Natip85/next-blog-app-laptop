@@ -6,7 +6,8 @@ export const createArticle = async (
   values: any,
   asPublished: boolean,
   topic: string | undefined,
-  previewSubtitle: string | undefined
+  previewSubtitle: string | undefined,
+  image: string | undefined
 ) => {
   const user = await currentUser();
   if (!user) {
@@ -22,6 +23,7 @@ export const createArticle = async (
         categoryId: undefined,
         isPublished: asPublished,
         previewSubtitle: previewSubtitle,
+        image: image,
       },
     });
     return { success: article };
@@ -41,6 +43,7 @@ export const createArticle = async (
         categoryId: newCategory.id,
         isPublished: asPublished,
         previewSubtitle: previewSubtitle,
+        image: image,
       },
     });
     return { success: article };

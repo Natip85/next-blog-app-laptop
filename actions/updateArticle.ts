@@ -2,7 +2,11 @@
 import db from "@/db/db";
 import { currentUser } from "@/lib/auth";
 
-export const updateArticle = async (articleId: string, values: any) => {
+export const updateArticle = async (
+  articleId: string,
+  values: any,
+  image: string | undefined
+) => {
   const user = await currentUser();
   if (!user) {
     return { error: "No user found" };
@@ -17,6 +21,7 @@ export const updateArticle = async (articleId: string, values: any) => {
     where: { id: existingArticle.id },
     data: {
       editorData: { ...values },
+      image: image,
     },
   });
   return { success: updatedArticle };

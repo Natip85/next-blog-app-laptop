@@ -13,16 +13,22 @@ import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { publishDraftArticle } from "../../actions/publishDraftArticle";
 import { Textarea } from "../ui/textarea";
 import { Separator } from "../ui/separator";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { User2 } from "lucide-react";
+import Image from "next/image";
+import { AspectRatio } from "../ui/aspect-ratio";
 
 interface PublishArticleFormProps {
   draftEditorData: any;
   publishEditorData: any;
   article: any;
+  image: string | undefined;
 }
 const PublishArticleForm = ({
   draftEditorData,
   article,
   publishEditorData,
+  image,
 }: PublishArticleFormProps) => {
   const user = useCurrentUser();
   const router = useRouter();
@@ -92,7 +98,8 @@ const PublishArticleForm = ({
           dataToCreate,
           topicId,
           topic,
-          prevSubtitle
+          prevSubtitle,
+          image
         ).then((res) => {
           toast.success("Article successfully published");
           router.push(`/article-details/${res.success?.id}`);
@@ -104,20 +111,40 @@ const PublishArticleForm = ({
           time: draftEditorData.time ?? null,
           blocks: convertToJSON(draftEditorData?.blocks),
         };
-        createArticle(dataToCreate, true, topic, prevSubtitle).then((res) => {
-          if (res.success) {
-            toast.success("Article successfully created");
-            router.push(`/article-details/${res.success?.id}`);
+        createArticle(dataToCreate, true, topic, prevSubtitle, image).then(
+          (res) => {
+            if (res.success) {
+              toast.success("Article successfully created");
+              router.push(`/article-details/${res.success?.id}`);
+            }
           }
-        });
+        );
       }
     });
   }
   return (
-    <div className="flex flex-col sm:flex-row justify-between gap-5 p-10">
+    <div className="flex flex-col sm:flex-row justify-between gap-5 p-10 h-full">
       <div className="flex-1 flex flex-col gap-5">
         <div className="font-bold">Article preview</div>
-        <div className="max-h-[500px] overflow-x-auto sm:overflow-y-auto">
+        <div className="relative aspect-videoh-[50px]">
+          {image ? (
+            <AspectRatio ratio={16 / 6} className="bg-muted">
+              <Image
+                src={image}
+                alt="Photo by Drew Beamer"
+                fill
+                className="rounded-md object-cover"
+              />
+            </AspectRatio>
+          ) : (
+            <Avatar className="size-10">
+              <AvatarFallback className="bg-amber-500">
+                <User2 className="text-white" />
+              </AvatarFallback>
+            </Avatar>
+          )}
+        </div>
+        <div className="max-h-[300px] overflow-x-auto sm:overflow-y-auto">
           <div id="publishing-editor" />
         </div>
         <div className="flex flex-col gap-3">
