@@ -96,7 +96,7 @@ const ArticleCard = ({ articles }: ArticleCardProps) => {
           <CardFooter className="flex items-center justify-between gap-3 p-0 py-5">
             <div className="flex items-center gap-3">
               <Badge variant={"secondary"} className="h-8 whitespace-nowrap">
-                <span key={article.id}>{article.category.title}</span>
+                <span key={article.id}>{article.category?.title}</span>
               </Badge>
               <span className="text-xs text-muted-foreground">
                 {article.readTime} min read

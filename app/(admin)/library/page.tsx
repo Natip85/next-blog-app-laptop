@@ -1,9 +1,9 @@
 import { getUserArticles } from "@/actions/getUserArticles";
+import SavedArticlesList from "@/components/article/SavedArticlesList";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import StoriesList from "@/components/article/StoriesList";
 
-const StoriesPage = async () => {
+const LibraryPage = async () => {
   const articles = await getUserArticles();
 
   return (
@@ -11,16 +11,16 @@ const StoriesPage = async () => {
       <div className="w-full sm:w-2/3 p-5">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl sm:text-5xl font-semibold my-10">
-            Your articles
+            Your library
           </h1>
           <Button
             asChild
             className="bg-green-600 rounded-3xl hover:bg-green-700"
           >
-            <Link href={"/article/new"}>Write an article</Link>
+            <Link href={"#"}>New link</Link>
           </Button>
         </div>
-        <StoriesList articles={articles} />
+        <SavedArticlesList articles={articles} />
       </div>
       <div className="hidden sm:flex flex-col h-screen flex-1 border-l p-5">
         Second part
@@ -29,4 +29,4 @@ const StoriesPage = async () => {
   );
 };
 
-export default StoriesPage;
+export default LibraryPage;

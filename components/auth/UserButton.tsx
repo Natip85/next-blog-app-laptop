@@ -54,7 +54,7 @@ const UserButton = () => {
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem className="gap-2 hover:cursor-pointer" asChild>
-          <Link href={"#"}>
+          <Link href={"/library"}>
             <Library className="size-4" /> Library
           </Link>
         </DropdownMenuItem>
