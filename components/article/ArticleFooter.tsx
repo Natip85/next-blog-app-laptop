@@ -7,8 +7,8 @@ import { Separator } from "../ui/separator";
 
 const ArticleFooter = ({ article }: ArticleWithUser) => {
   return (
-    <div className="bg-gray-100 p-20">
-      <div className="container max-w-3xl flex flex-col gap-10">
+    <div className="bg-gray-100 sm:p-20 p-5">
+      <div className="sm:container sm:max-w-3xl flex flex-col gap-10">
         <Avatar className="size-20">
           <AvatarImage src={article?.user?.image} />
           <AvatarFallback>
@@ -17,7 +17,9 @@ const ArticleFooter = ({ article }: ArticleWithUser) => {
         </Avatar>
         <div>
           <div className="flex items-center justify-between">
-            <h3>Written by {article.user.name}</h3>
+            <h3 className="text-sm md:text-lg font-semibold">
+              Written by {article.user.name}
+            </h3>
             <div className="flex items-center gap-3">
               <Button className="rounded-3xl">Follow</Button>
 

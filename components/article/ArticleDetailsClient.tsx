@@ -518,12 +518,12 @@ const ArticleDetailsClient = ({
 
         <div id="read-editor" />
         <div>
-          Thank you for reading until the end. Before you go: <br />
+          <h5>Thank you for reading until the end. Before you go:</h5> <br />
           <br />
-          Please consider clapping and following the writer! 👏 Follow us on
-          Twitter(X), LinkedIn, and YouTube. Visit Stackademic.com to find out
-          more about how we are democratizing free programming education around
-          the world.
+          - Please consider clapping and following the writer! 👏 <br />
+          - Follow us on Twitter(X), LinkedIn, and YouTube. <br />- Visit
+          Stackademic.com to find out more about how we are democratizing free
+          programming education around the world.
         </div>
         <div className="py-3 mt-10 flex items-center justify-between">
           <div className="flex items-center gap-3">
