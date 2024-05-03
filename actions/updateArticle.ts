@@ -5,7 +5,7 @@ import { currentUser } from "@/lib/auth";
 export const updateArticle = async (
   articleId: string,
   values: any,
-  image: string | undefined
+  image: string | null
 ) => {
   const user = await currentUser();
   if (!user) {

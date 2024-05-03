@@ -12,11 +12,9 @@ import { useRouter } from "next/navigation";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { publishDraftArticle } from "../../actions/publishDraftArticle";
 import { Textarea } from "../ui/textarea";
-import { Separator } from "../ui/separator";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { User2 } from "lucide-react";
+import { Terminal } from "lucide-react";
 import Image from "next/image";
-import { AspectRatio } from "../ui/aspect-ratio";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 
 interface PublishArticleFormProps {
   draftEditorData: any;
@@ -33,15 +31,6 @@ const PublishArticleForm = ({
   const user = useCurrentUser();
   const router = useRouter();
   const ref = useRef<EditorJS | null>(null);
-  const [draftData, setDraftData] = useState<any>(() => {
-    const storedData = localStorage.getItem("document");
-    return storedData
-      ? JSON.parse(storedData)
-      : {
-          time: new Date().getTime(),
-          blocks: convertFromJSON(draftEditorData?.editorData?.blocks),
-        };
-  });
 
   const [isPending, startTransition] = useTransition();
   const [topic, setTopic] = useState<string | undefined>();
@@ -123,74 +112,80 @@ const PublishArticleForm = ({
     });
   }
   return (
-    <div className="flex flex-col sm:flex-row justify-between gap-5 p-10 h-full">
-      <div className="flex-1 flex flex-col gap-5">
-        <div className="font-bold">Article preview</div>
-        <div className="relative aspect-videoh-[50px]">
-          {image ? (
-            <AspectRatio ratio={16 / 6} className="bg-muted">
-              <Image
-                src={image}
-                alt="Photo by Drew Beamer"
-                fill
-                className="rounded-md object-cover"
-              />
-            </AspectRatio>
-          ) : (
-            <Avatar className="size-10">
-              <AvatarFallback className="bg-amber-500">
-                <User2 className="text-white" />
-              </AvatarFallback>
-            </Avatar>
-          )}
+    <>
+      <div className="flex flex-col sm:flex-row justify-between gap-5 p-10 max-h-[75vh] sm:max-h-[75vh] overflow-y-auto">
+        <div className="flex-1 flex flex-col justify-between gap-5">
+          <div className="relative aspect-video h-[50px]">
+            <h2 className="font-bold mb-5">Article preview</h2>
+            {image ? (
+              <div className="relative max-h-[200px] w-full aspect-video  px-10">
+                <Image
+                  src={image}
+                  alt={"article-pic"}
+                  fill
+                  sizes="2"
+                  className="w-full mx-auto"
+                />
+              </div>
+            ) : (
+              <Alert>
+                <Terminal className="h-4 w-4" />
+                <AlertTitle>Heads up!</AlertTitle>
+                <AlertDescription>
+                  Include a high-quality image in your article to make it more
+                  inviting to readers.
+                </AlertDescription>
+              </Alert>
+            )}
+          </div>
+
+          <div className="pt-36">
+            <div id="publishing-editor" />
+          </div>
         </div>
-        <div className="max-h-[300px] overflow-x-auto sm:overflow-y-auto">
-          <div id="publishing-editor" />
-        </div>
-        <div className="flex flex-col gap-3">
-          <Separator />
-          <Textarea
-            id="preview-subtitle"
-            placeholder="Write a preview subtitle..."
-            onChange={(e) => setPrevSubtitle(e.target.value)}
-          />
-          <label
-            htmlFor="preview-subtitle"
-            className="text-xs text-muted-foreground"
-          >
-            <span className="font-bold">Note:</span> Changes here will affect
-            how your story appears in public places like Medium’s homepage and
-            in subscribers’ inboxes — not the contents of the story itself.
-          </label>
-        </div>
-      </div>
-      <div className="flex flex-1 flex-col gap-10">
-        <div>
-          Publishing to: <span className="font-bold">{user?.name}</span>
-        </div>
-        <div className="flex flex-col gap-3">
-          <label htmlFor="category" className="text-xs">
-            Add a topics so readers know what your story is about
-          </label>
-          <Input
-            placeholder="Add a topic..."
-            className="rounded-none"
-            onChange={(e) => setTopic(e.target.value)}
-          />
-          {error && <div className="text-xs text-destructive">{error}</div>}
-        </div>
-        <div>
-          <Button
-            onClick={handlePublishArticle}
-            disabled={isPending}
-            size={"sm"}
-            className="bg-green-600 rounded-3xl hover:bg-green-700"
-          >
-            Publish now
-          </Button>
+        <div className="flex flex-1 flex-col gap-10">
+          <div>
+            Publishing to: <span className="font-bold">{user?.name}</span>
+          </div>
+          <div className="flex flex-col gap-3">
+            <label htmlFor="category" className="text-xs">
+              Add a topics so readers know what your story is about
+            </label>
+            <Input
+              placeholder="Add a topic..."
+              className="rounded-none"
+              onChange={(e) => setTopic(e.target.value)}
+            />
+            {error && <div className="text-xs text-destructive">{error}</div>}
+          </div>
+          <div className="flex flex-col gap-3">
+            <Textarea
+              id="preview-subtitle"
+              placeholder="Write an article preview subtitle..."
+              onChange={(e) => setPrevSubtitle(e.target.value)}
+            />
+            <label
+              htmlFor="preview-subtitle"
+              className="text-xs text-muted-foreground"
+            >
+              <span className="font-bold">Note:</span> Changes here will affect
+              how your story appears in public places like Medium’s homepage and
+              in subscribers’ inboxes — not the contents of the story itself.
+            </label>
+          </div>
         </div>
       </div>
-    </div>
+      <div className="text-end">
+        <Button
+          onClick={handlePublishArticle}
+          disabled={isPending}
+          size={"sm"}
+          className="bg-green-600 rounded-3xl hover:bg-green-700 w-full sm:w-fit"
+        >
+          Publish now
+        </Button>
+      </div>
+    </>
   );
 };
 

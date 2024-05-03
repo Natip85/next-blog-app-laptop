@@ -35,7 +35,7 @@ const ArticlesList = () => {
   return (
     <>
       <ArticleCard articles={shuffledProducts} />
-      <div className="flex justify-center items-center p-4" ref={ref}>
+      <div className="flex justify-center items-center p-4 mt-28" ref={ref}>
         <BeatLoader />
       </div>
     </>

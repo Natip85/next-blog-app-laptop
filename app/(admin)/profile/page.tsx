@@ -251,7 +251,9 @@ const ProfilePage = () => {
                       )}
                     />
                     <div className="mt-5 flex items-center justify-between">
-                      <span>Two Factor Authentication</span>
+                      <span className="text-sm font-medium">
+                        Two Factor Authentication
+                      </span>
                       <FormField
                         control={form.control}
                         name="isTwoFactorEnabled"
