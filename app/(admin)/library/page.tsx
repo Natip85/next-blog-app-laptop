@@ -1,11 +1,14 @@
 import { getUserArticles } from "@/actions/getUserArticles";
+import { getUserFavorites } from "@/actions/getUserFavorites";
 import SavedArticlesList from "@/components/article/SavedArticlesList";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 const LibraryPage = async () => {
-  const articles = await getUserArticles();
-
+  const [articles, favorites] = await Promise.all([
+    getUserArticles(),
+    getUserFavorites(),
+  ]);
   return (
     <div className="container max-w-7xl flex justify-between gap-10">
       <div className="w-full sm:w-2/3 p-5">
@@ -17,10 +20,10 @@ const LibraryPage = async () => {
             asChild
             className="bg-green-600 rounded-3xl hover:bg-green-700"
           >
-            <Link href={"#"}>New link</Link>
+            <Link href={"#"}>New list</Link>
           </Button>
         </div>
-        <SavedArticlesList articles={articles} />
+        <SavedArticlesList articles={articles} favorites={favorites} />
       </div>
       <div className="hidden sm:flex flex-col h-screen flex-1 border-l p-5">
         Second part
