@@ -5,15 +5,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default async function FeedPage() {
   const allArticles = await getAllArticles(1);
-  function shuffleArray(array: any) {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-  }
+  // function shuffleArray(array: any) {
+  //   for (let i = array.length - 1; i > 0; i--) {
+  //     const j = Math.floor(Math.random() * (i + 1));
+  //     [array[i], array[j]] = [array[j], array[i]];
+  //   }
+  //   return array;
+  // }
 
-  const shuffledProducts = shuffleArray(allArticles);
+  // const shuffledProducts = shuffleArray(allArticles);
   return (
     <div className="container max-w-5xl flex flex-col md:flex-row p-10 gap-10">
       <div className="flex-1">
@@ -23,7 +23,7 @@ export default async function FeedPage() {
             <TabsTrigger value="following">Following</TabsTrigger>
           </TabsList>
           <TabsContent value="forYou">
-            <ArticleCard articles={shuffledProducts} />
+            <ArticleCard articles={allArticles} />
             <ArticlesList />
           </TabsContent>
           <TabsContent value="following">following goes here</TabsContent>

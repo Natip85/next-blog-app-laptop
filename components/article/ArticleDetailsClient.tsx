@@ -35,6 +35,7 @@ import { AspectRatio } from "../ui/aspect-ratio";
 import ArticleFooter from "./ArticleFooter";
 import { createFavorite } from "@/actions/createFavorite";
 import Link from "next/link";
+import { createReadingHistory } from "@/actions/createReadingHistory";
 
 export interface ArticleDetailsClientProps {
   article: ArticleWithUser | null;
@@ -104,6 +105,15 @@ const ArticleDetailsClient = ({
       setLiked(true);
     }
   }, [likes, user]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (!user?.id) return;
+      createReadingHistory(article.id, user.id);
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   function handleResponseSubmit() {
     setError("");

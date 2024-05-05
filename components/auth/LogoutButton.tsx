@@ -9,6 +9,7 @@ interface LogoutButtonProps {
 
 const LogoutButton = ({ children }: LogoutButtonProps) => {
   const onClick = () => {
+    localStorage.removeItem("edit-document");
     logout();
     // signOut()
   };

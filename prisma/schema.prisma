@@ -34,6 +34,7 @@ model User {
   comments              Comment[]
   likes                 Like[]
   favorites             Favorite[]
+  readingHistory        ReadingHistory[]
 }
 
 model Account {
@@ -111,6 +112,7 @@ model Article {
   comments    Comment[]
   likes       Like[]
   favorite    Favorite[]
+  readingHistory ReadingHistory[]
 }
 
 model Category {
@@ -153,6 +155,18 @@ model Favorite {
 
   articleId   String   @db.ObjectId
   article     Article     @relation(fields: [articleId], references: [id], onDelete: Cascade)
+}
+model ReadingHistory {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  lastVisitedAt   DateTime  
+  error           String?
+  success         String?
+  
+  userId          String   @db.ObjectId
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  articleId       String   @db.ObjectId
+  article         Article     @relation(fields: [articleId], references: [id], onDelete: Cascade)
 }
 
 model Follow {
