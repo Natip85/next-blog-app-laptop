@@ -12,7 +12,7 @@ export const getAllArticles = async (page: number) => {
       where: { isPublished: true },
       skip: offset,
       take: perPage,
-      include: { user: true, category: true },
+      include: { user: true, category: true, favorite: true },
     });
     return articles;
   } catch (error: any) {

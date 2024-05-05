@@ -7,7 +7,7 @@ export const getUserArticles = async () => {
     if (!user) return null;
     const articles = await db.article.findMany({
       where: { userId: user.id },
-      include: { category: true },
+      include: { category: true, user: true },
     });
     if (!articles) return null;
     return articles;

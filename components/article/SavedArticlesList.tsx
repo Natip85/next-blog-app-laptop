@@ -4,18 +4,15 @@ import { Separator } from "../ui/separator";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { MoreHorizontal, User2 } from "lucide-react";
-import ArticleCard from "./ArticleCard";
 import { Card, CardContent, CardFooter } from "../ui/card";
 import Link from "next/link";
 import Image from "next/image";
-import { Badge } from "../ui/badge";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
-import { Button } from "../ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,15 +22,70 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import moment from "moment";
-import { Favorite } from "@prisma/client";
+import { useState, useTransition } from "react";
+import { createFavorite } from "@/actions/createFavorite";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
+import { Button } from "../ui/button";
+import { deleteArticle } from "@/actions/deleteArticle";
+
 interface SavedArticlesListProps {
   articles: any;
   favorites: any;
+  history: any;
 }
-const SavedArticlesList = ({ articles, favorites }: SavedArticlesListProps) => {
-  console.log({ articles, favorites });
+const SavedArticlesList = ({
+  articles,
+  favorites,
+  history,
+}: SavedArticlesListProps) => {
+  console.log({ history });
 
+  const router = useRouter();
   const user = useCurrentUser();
+  const [error, setError] = useState<string | undefined>("");
+  const [success, setSuccess] = useState<string | undefined>("");
+  const [isPending, startTransition] = useTransition();
+  const [openDelete, setOpenDelete] = useState(false);
+
+  function handleRemoveFavorite(id: string) {
+    setError("");
+    setSuccess("");
+    startTransition(() => {
+      if (!user?.id) return;
+      createFavorite(user.id, id).then((res) => {
+        if (res.error) {
+          setError(res.error);
+          toast.error(res.error);
+        }
+        if (res.success) {
+          setSuccess(res.success);
+          toast.success(res.success);
+        }
+        router.refresh();
+      });
+    });
+  }
+  function handleDelete(id: string | undefined) {
+    startTransition(() => {
+      deleteArticle(id).then((res) => {
+        if (res.success) {
+          setOpenDelete(!openDelete);
+          toast.success("Article successfully deleted");
+          router.refresh();
+        }
+      });
+    });
+  }
   return (
     <Tabs defaultValue="myArticles">
       <TabsList className="bg-transparent">
@@ -140,18 +192,44 @@ const SavedArticlesList = ({ articles, favorites }: SavedArticlesListProps) => {
                             <DropdownMenuItem>
                               <span className="hover:cursor-pointer">
                                 <Link href={`/article/${article.id}`}>
-                                  Edit story
+                                  Edit article
                                 </Link>
                               </span>
                             </DropdownMenuItem>
                           </DropdownMenuGroup>
                           <DropdownMenuSeparator />
                           <DropdownMenuGroup>
-                            <DropdownMenuItem>
-                              <span className="hover:cursor-pointer text-destructive">
-                                Delete story
-                              </span>
-                            </DropdownMenuItem>
+                            <Dialog
+                              open={openDelete}
+                              onOpenChange={setOpenDelete}
+                            >
+                              <DialogTrigger className="relative w-full flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm text-destructive outline-none transition-colors focus:bg-accent hover:bg-accent focus:text-destructive data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+                                Delete
+                              </DialogTrigger>
+                              <DialogContent className="shadow-md rounded-none flex flex-col gap-10 justify-center items-center py-48">
+                                <DialogHeader className="flex flex-col gap-5">
+                                  <DialogTitle className="text-3xl text-center">
+                                    Delete story
+                                  </DialogTitle>
+                                  <DialogDescription>
+                                    Deletion is not reversible, and the story
+                                    will be completely deleted.
+                                  </DialogDescription>
+                                </DialogHeader>
+                                <div className="flex justify-end gap-5">
+                                  <DialogClose className="text-sm text-destructive rounded-3xl border border-destructive hover:text-red-700 hover:border-red-700 hover:bg-transparent px-3">
+                                    Cancel
+                                  </DialogClose>
+                                  <Button
+                                    disabled={isPending}
+                                    onClick={() => handleDelete(article.id)}
+                                    className="bg-destructive text-white rounded-3xl hover:bg-red-700"
+                                  >
+                                    Delete
+                                  </Button>
+                                </div>
+                              </DialogContent>
+                            </Dialog>
                           </DropdownMenuGroup>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -174,7 +252,7 @@ const SavedArticlesList = ({ articles, favorites }: SavedArticlesListProps) => {
                 <div className="flex items-center gap-2 mb-3">
                   <div>
                     <Avatar>
-                      <AvatarImage src={user?.image} />
+                      <AvatarImage src={favArticle?.user?.image} />
                       <AvatarFallback>
                         <User2 />
                       </AvatarFallback>
@@ -185,7 +263,7 @@ const SavedArticlesList = ({ articles, favorites }: SavedArticlesListProps) => {
                 <div className="flex items-center justify-between gap-10">
                   <div>
                     <Link
-                      href={"#"}
+                      href={`/article-details/${favArticle.id}`}
                       className="hover:cursor-pointer flex flex-col gap-3"
                     >
                       {(favArticle?.editorData as any)?.blocks.map(
@@ -254,8 +332,10 @@ const SavedArticlesList = ({ articles, favorites }: SavedArticlesListProps) => {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-56">
                       <DropdownMenuGroup>
-                        <DropdownMenuItem>
-                          <span className="hover:cursor-pointer">
+                        <DropdownMenuItem
+                          onClick={() => handleRemoveFavorite(favArticle.id)}
+                        >
+                          <span className="hover:cursor-pointer text-destructive">
                             Remove article
                           </span>
                         </DropdownMenuItem>
@@ -263,7 +343,7 @@ const SavedArticlesList = ({ articles, favorites }: SavedArticlesListProps) => {
                       <DropdownMenuSeparator />
                       <DropdownMenuGroup>
                         <DropdownMenuItem>
-                          <span className="hover:cursor-pointer text-destructive">
+                          <span className="hover:cursor-pointer ">
                             Follow author
                           </span>
                         </DropdownMenuItem>

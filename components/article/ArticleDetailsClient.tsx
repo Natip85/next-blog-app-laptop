@@ -78,8 +78,6 @@ const ArticleDetailsClient = ({
   );
   const [isFavorite, setIsFavorite] = useState(isUserFavorite);
   const [scope, animate] = useAnimate();
-  console.log({ article, comments, likes });
-  console.log({ isFavorite });
 
   useEffect(() => {
     if (article) {
@@ -244,7 +242,7 @@ const ArticleDetailsClient = ({
           <div>
             <Avatar className="size-10">
               <AvatarImage src={article?.user?.image} />
-              <AvatarFallback>
+              <AvatarFallback className="bg-green-600">
                 <User2 className="text-white" />
               </AvatarFallback>
             </Avatar>

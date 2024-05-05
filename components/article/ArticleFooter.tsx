@@ -11,8 +11,8 @@ const ArticleFooter = ({ article }: ArticleWithUser) => {
       <div className="sm:container sm:max-w-3xl flex flex-col gap-10">
         <Avatar className="size-20">
           <AvatarImage src={article?.user?.image} />
-          <AvatarFallback>
-            <User2 className="text-white" />
+          <AvatarFallback className="bg-green-600">
+            <User2 className="text-white size-10" />
           </AvatarFallback>
         </Avatar>
         <div>

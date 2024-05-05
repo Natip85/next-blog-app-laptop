@@ -26,6 +26,7 @@ export const getUserFavorites = async () => {
           in: favoriteArticleIds,
         },
       },
+      include: { user: true },
     });
     return favoriteArticles;
   } catch (error) {

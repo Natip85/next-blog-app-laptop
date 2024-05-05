@@ -20,13 +20,13 @@ export default async function FeedPage() {
         <Tabs defaultValue="forYou">
           <TabsList className="bg-white sticky top-0 z-50 w-full py-8 border-b-[1px] rounded-none">
             <TabsTrigger value="forYou">For you</TabsTrigger>
-            <TabsTrigger value="published">Published</TabsTrigger>
+            <TabsTrigger value="following">Following</TabsTrigger>
           </TabsList>
           <TabsContent value="forYou">
             <ArticleCard articles={shuffledProducts} />
             <ArticlesList />
           </TabsContent>
-          <TabsContent value="published">published here</TabsContent>
+          <TabsContent value="following">following goes here</TabsContent>
         </Tabs>
       </div>
       <div className="w-1/4 border-l-[1px] p-5">second part</div>
