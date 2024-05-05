@@ -109,7 +109,11 @@ const ArticleDetailsClient = ({
   useEffect(() => {
     const timer = setTimeout(() => {
       if (!user?.id) return;
-      createReadingHistory(article.id, user.id);
+      createReadingHistory(article.id, user.id).then((res) => {
+        if (res.success) {
+          router.refresh();
+        }
+      });
     }, 5000);
 
     return () => clearTimeout(timer);
