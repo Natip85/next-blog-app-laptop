@@ -22,6 +22,7 @@ import { Separator } from "../ui/separator";
 
 const UserButton = () => {
   const user = useCurrentUser();
+
   const maskEmail = (email: string): string => {
     const [username, domain] = email ? email.split("@") : ["email not avaible"];
     const maskedUsername =
@@ -33,7 +34,7 @@ const UserButton = () => {
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Avatar className="size-10">
-          <AvatarImage src={user?.image || ""} />
+          <AvatarImage src={user?.image} />
           <AvatarFallback className="bg-amber-500">
             <User2 className="text-white" />
           </AvatarFallback>

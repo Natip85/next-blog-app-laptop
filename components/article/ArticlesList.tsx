@@ -33,12 +33,12 @@ const ArticlesList = () => {
     }
   }, [inView]);
   return (
-    <>
+    <div>
       <ArticleCard articles={articles} />
-      <div className="flex justify-center items-center p-4 mt-28" ref={ref}>
+      <div className="flex justify-center items-center p-4 mt-16" ref={ref}>
         <BeatLoader />
       </div>
-    </>
+    </div>
   );
 };
 

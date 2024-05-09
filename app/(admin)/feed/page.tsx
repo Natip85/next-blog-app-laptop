@@ -1,10 +1,15 @@
 import { getAllArticles } from "@/actions/getAllArticles";
+import { getTopPicks } from "@/actions/getTopPicks";
 import ArticleCard from "@/components/article/ArticleCard";
 import ArticlesList from "@/components/article/ArticlesList";
+import TopPicksCard from "@/components/article/TopPicksCard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default async function FeedPage() {
-  const allArticles = await getAllArticles(1);
+  const [allArticles, topPicks] =
+    (await Promise.all([getAllArticles(1), getTopPicks()])) || null;
+  console.log({ topPicks });
+
   // function shuffleArray(array: any) {
   //   for (let i = array.length - 1; i > 0; i--) {
   //     const j = Math.floor(Math.random() * (i + 1));
@@ -29,7 +34,12 @@ export default async function FeedPage() {
           <TabsContent value="following">following goes here</TabsContent>
         </Tabs>
       </div>
-      <div className="w-1/4 border-l-[1px] p-5">second part</div>
+      <div className="w-1/4 border-l-[1px] p-5">
+        <h3 className="text-sm font-semibold mb-5">Top picks</h3>
+        <div>
+          <TopPicksCard articles={topPicks} />
+        </div>
+      </div>
     </div>
   );
 }

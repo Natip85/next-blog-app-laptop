@@ -267,7 +267,7 @@ const SavedArticlesList = ({
                       </AvatarFallback>
                     </Avatar>
                   </div>
-                  <div className="font-medium">{user?.name}</div>
+                  <div className="font-medium">{favArticle?.user?.name}</div>
                 </div>
                 <div className="flex items-center justify-between gap-10">
                   <div>

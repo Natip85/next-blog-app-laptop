@@ -19,6 +19,7 @@ const LibraryPage = async () => {
             Your library
           </h1>
           <Button
+            size={"sm"}
             asChild
             className="bg-green-600 rounded-3xl hover:bg-green-700"
           >
