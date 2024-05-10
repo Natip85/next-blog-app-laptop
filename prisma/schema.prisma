@@ -35,6 +35,7 @@ model User {
   likes                 Like[]
   favorites             Favorite[]
   readingHistory        ReadingHistory[]
+  
 }
 
 model Account {

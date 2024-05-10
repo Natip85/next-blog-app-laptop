@@ -10,7 +10,11 @@ export const getArticleById = async (articleId: string) => {
         id: articleId === "new" ? newArticleId : articleId,
       },
       include: {
-        user: true,
+        user: {
+          include: {
+            followers: true,
+          },
+        },
         comments: true,
         favorite: true,
       },

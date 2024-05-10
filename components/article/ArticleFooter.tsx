@@ -4,8 +4,38 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { ArticleWithUser } from "./ArticleDetailsClient";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
+import { useEffect, useState, useTransition } from "react";
+import { cn } from "@/lib/utils";
+import { toggleFollowAuthor } from "@/actions/toggleFollowAuthor";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { toast } from "sonner";
 
 const ArticleFooter = ({ article }: ArticleWithUser) => {
+  const user = useCurrentUser();
+  const [isPending, startTransition] = useTransition();
+  const [isFollowing, setIsFollowing] = useState(false);
+
+  useEffect(() => {
+    const followerIds = article.user.followers.map(
+      (follower: any) => follower.followerId
+    );
+
+    setIsFollowing(followerIds.includes(user?.id));
+  }, []);
+  function handleFollowAuthor() {
+    setIsFollowing(!isFollowing);
+    startTransition(() => {
+      if (!user?.id) return;
+      toggleFollowAuthor(article.userId, user.id).then((res) => {
+        if (res?.error) {
+          toast.error(res.error);
+        }
+        if (res?.success) {
+          toast.success(isFollowing ? "Unfollowed author" : "Following author");
+        }
+      });
+    });
+  }
   return (
     <div className="bg-gray-100 sm:p-20 p-5">
       <div className="sm:container sm:max-w-3xl flex flex-col gap-10">
@@ -21,7 +51,17 @@ const ArticleFooter = ({ article }: ArticleWithUser) => {
               Written by {article.user.name}
             </h3>
             <div className="flex items-center gap-3">
-              <Button className="rounded-3xl">Follow</Button>
+              <Button
+                onClick={handleFollowAuthor}
+                variant={isFollowing ? "outline" : "default"}
+                className={cn(
+                  "rounded-3xl",
+                  isFollowing &&
+                    "border border-green-600 text-green-600 hover:text-green-700"
+                )}
+              >
+                {isFollowing ? "Following" : "Follow"}
+              </Button>
 
               <Button className="rounded-full p-3">
                 <MailPlus className="size-5" />

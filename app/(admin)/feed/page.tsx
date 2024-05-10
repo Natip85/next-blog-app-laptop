@@ -1,13 +1,19 @@
 import { getAllArticles } from "@/actions/getAllArticles";
 import { getTopPicks } from "@/actions/getTopPicks";
+import { getUserFollowingList } from "@/actions/getUserFollowingList";
 import ArticleCard from "@/components/article/ArticleCard";
 import ArticlesList from "@/components/article/ArticlesList";
+import FollowingList from "@/components/article/FollowingList";
 import TopPicksCard from "@/components/article/TopPicksCard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default async function FeedPage() {
-  const [allArticles, topPicks] =
-    (await Promise.all([getAllArticles(1), getTopPicks()])) || null;
+  const [allArticles, topPicks, allFollowing] =
+    (await Promise.all([
+      getAllArticles(1),
+      getTopPicks(),
+      getUserFollowingList(),
+    ])) || null;
   return (
     <div className="container max-w-7xl flex flex-col md:flex-row p-10 gap-10">
       <div className="flex-1">
@@ -20,7 +26,9 @@ export default async function FeedPage() {
             <ArticleCard articles={allArticles} />
             <ArticlesList />
           </TabsContent>
-          <TabsContent value="following">following goes here</TabsContent>
+          <TabsContent value="following">
+            <FollowingList allFollowing={allFollowing} />
+          </TabsContent>
         </Tabs>
       </div>
       <div className=" w-1/3 border-l-[1px] p-5 hidden md:block">
