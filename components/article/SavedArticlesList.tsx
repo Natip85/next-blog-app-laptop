@@ -97,10 +97,16 @@ const SavedArticlesList = ({
   }
   return (
     <Tabs defaultValue="myArticles">
-      <TabsList className="bg-transparent">
-        <TabsTrigger value="myArticles">My articles</TabsTrigger>
-        <TabsTrigger value="mySaved">Saved articles</TabsTrigger>
-        <TabsTrigger value="readingHistory">Reading history</TabsTrigger>
+      <TabsList className="bg-transparent flex items-center gap-3 md:gap-5">
+        <TabsTrigger value="myArticles" className="p-0">
+          My articles
+        </TabsTrigger>
+        <TabsTrigger value="mySaved" className="p-0">
+          Saved articles
+        </TabsTrigger>
+        <TabsTrigger value="readingHistory" className="p-0">
+          Reading history
+        </TabsTrigger>
       </TabsList>
       <Separator className="-mt-1" />
       <TabsContent value="myArticles">
@@ -367,10 +373,12 @@ const SavedArticlesList = ({
       </TabsContent>
       <TabsContent value="readingHistory">
         {history && history.length > 0 && (
-          <div className="flex items-center justify-between p-5 bg-gray-100 rounded text-sm my-4">
-            <span>You can clear your reading history for a fresh start.</span>
+          <div className="flex items-center justify-between gap-3 p-5 bg-gray-100 rounded text-sm my-4">
+            <span className="text-xs md:text-sm">
+              You can clear your reading history for a fresh start.
+            </span>
             <Dialog open={openDelete1} onOpenChange={setOpenDelete1}>
-              <DialogTrigger className="bg-red-700 rounded-3xl relative flex cursor-pointer select-none items-center px-2 py-1.5 text-sm text-white outline-none transition-colors hover:bg-red-800 focus:text-white data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+              <DialogTrigger className="whitespace-nowrap bg-red-700 rounded-3xl relative flex cursor-pointer select-none items-center px-2 py-1.5 text-sm text-white outline-none transition-colors hover:bg-red-800 focus:text-white data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
                 Clear history
               </DialogTrigger>
               <DialogContent className="shadow-md rounded-none flex flex-col gap-10 justify-center items-center py-48">

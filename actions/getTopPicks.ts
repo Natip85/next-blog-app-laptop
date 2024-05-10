@@ -26,9 +26,9 @@ export const getTopPicks = async () => {
       (a, b) => b.totalLikesCount - a.totalLikesCount
     );
 
-    const top5Articles = sortedArticles.slice(0, 5);
+    const top3Articles = sortedArticles.slice(0, 3);
 
-    return top5Articles;
+    return top3Articles;
   } catch (error) {
     return { error: "Error fetching top picks", details: error };
   }

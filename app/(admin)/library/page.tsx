@@ -1,15 +1,18 @@
 import { getReadingHistory } from "@/actions/getReadingHistory";
+import { getTopPicks } from "@/actions/getTopPicks";
 import { getUserArticles } from "@/actions/getUserArticles";
 import { getUserFavorites } from "@/actions/getUserFavorites";
 import SavedArticlesList from "@/components/article/SavedArticlesList";
+import TopPicksCard from "@/components/article/TopPicksCard";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 const LibraryPage = async () => {
-  const [articles, favorites, history] = await Promise.all([
+  const [articles, favorites, history, topPicks] = await Promise.all([
     getUserArticles(),
     getUserFavorites(),
     getReadingHistory(),
+    getTopPicks(),
   ]);
   return (
     <div className="container max-w-7xl flex justify-between gap-10">
@@ -32,8 +35,13 @@ const LibraryPage = async () => {
           history={history}
         />
       </div>
-      <div className="hidden sm:flex flex-col h-screen flex-1 border-l p-5">
-        Second part
+      <div className=" w-1/3 border-l-[1px] p-5 hidden md:block">
+        <div className="md:sticky md:top-0 pt-16">
+          <h3 className="text-sm font-semibold mb-5">Top picks</h3>
+          <div>
+            <TopPicksCard articles={topPicks} />
+          </div>
+        </div>
       </div>
     </div>
   );
