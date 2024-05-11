@@ -28,6 +28,8 @@ import { createFavorite } from "@/actions/createFavorite";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { getUserFavorites } from "@/actions/getUserFavorites";
+import { toggleFollowAuthor } from "@/actions/toggleFollowAuthor";
+import { getUserFollowingList } from "@/actions/getUserFollowingList";
 
 interface ArticleCardProps {
   articles: any;
@@ -39,12 +41,22 @@ const ArticleCard = ({ articles }: ArticleCardProps) => {
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
   const [userFavorites, setUserFavorites] = useState<any[]>([]);
+  const [userFollowing, setUserFollowing] = useState<any[]>([]);
 
   useEffect(() => {
     getUserFavorites().then((favorites: any) => {
       setUserFavorites(favorites);
     });
   }, []);
+
+  useEffect(() => {
+    handleFollowState();
+  }, []);
+  async function handleFollowState() {
+    getUserFollowingList().then((res: any) => {
+      setUserFollowing(res);
+    });
+  }
   function handleSaveArticle(id: string, article: any) {
     setUserFavorites((prevFavorites) => {
       const index = prevFavorites.findIndex((fav) => fav.id === article.id);
@@ -70,6 +82,22 @@ const ArticleCard = ({ articles }: ArticleCardProps) => {
           toast.success(res.success);
         }
         router.refresh();
+      });
+    });
+  }
+  function handleFollowAuthor(articleUserId: string) {
+    startTransition(() => {
+      if (!user?.id) return;
+      toggleFollowAuthor(articleUserId, user.id).then((res) => {
+        if (res.error) {
+          toast.error(res.error);
+          router.refresh();
+        }
+        if (res.success) {
+          handleFollowState();
+          toast.success(res.success);
+          router.refresh();
+        }
       });
     });
   }
@@ -221,9 +249,15 @@ const ArticleCard = ({ articles }: ArticleCardProps) => {
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />
                     <DropdownMenuGroup>
-                      <DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => handleFollowAuthor(article.userId)}
+                      >
                         <span className="hover:cursor-pointer">
-                          Follow author
+                          {userFollowing.some(
+                            (follow: any) => follow.id === article.id
+                          )
+                            ? "Unfollow author"
+                            : "Follow author"}
                         </span>
                       </DropdownMenuItem>
                     </DropdownMenuGroup>

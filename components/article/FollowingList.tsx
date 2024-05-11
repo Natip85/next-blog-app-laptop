@@ -22,25 +22,50 @@ import Image from "next/image";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import moment from "moment";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { getUserFavorites } from "@/actions/getUserFavorites";
+import { toggleFollowAuthor } from "@/actions/toggleFollowAuthor";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 interface FollowingListProps {
   allFollowing: any;
 }
 const FollowingList = ({ allFollowing }: FollowingListProps) => {
-  console.log({ allFollowing });
+  const user = useCurrentUser();
+  const router = useRouter();
   const [userFavorites, setUserFavorites] = useState<any[]>([]);
+  const [isFollowing, setIsFollowing] = useState(true);
+  const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
     getUserFavorites().then((favorites: any) => {
       setUserFavorites(favorites);
     });
   }, []);
+  function handleFollowAuthor(articleUserId: string) {
+    setIsFollowing(!isFollowing);
+    startTransition(() => {
+      if (!user?.id) return;
+      toggleFollowAuthor(articleUserId, user.id).then((res) => {
+        if (res?.error) {
+          toast.error(res.error);
+        }
+        if (res?.success) {
+          toast.success(isFollowing ? "Unfollowed author" : "Following author");
+          router.refresh();
+        }
+      });
+    });
+  }
   return (
-    <div>
+    <div className="flex flex-col gap-3">
       {allFollowing.map((article: any) => (
-        <Card key={article.id}>
+        <Card
+          key={article.id}
+          className="border-0 border-b-[1px] shadow-none rounded-none"
+        >
           <CardContent className="p-5">
             <div className="flex items-center gap-2 mb-3">
               <div>
@@ -178,7 +203,10 @@ const FollowingList = ({ allFollowing }: FollowingListProps) => {
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />
                   <DropdownMenuGroup>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem
+                      disabled={isPending}
+                      onClick={() => handleFollowAuthor(article.userId)}
+                    >
                       <span className="hover:cursor-pointer">
                         Follow author
                       </span>
