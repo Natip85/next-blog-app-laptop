@@ -22,7 +22,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import moment from "moment";
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { createFavorite } from "@/actions/createFavorite";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -38,6 +38,8 @@ import {
 import { Button } from "../ui/button";
 import { deleteArticle } from "@/actions/deleteArticle";
 import { deleteAllHistory } from "@/actions/getReadingHistory";
+import { toggleFollowAuthor } from "@/actions/toggleFollowAuthor";
+import { getUserFollowingList } from "@/actions/getUserFollowingList";
 
 interface SavedArticlesListProps {
   articles: any;
@@ -56,7 +58,15 @@ const SavedArticlesList = ({
   const [isPending, startTransition] = useTransition();
   const [openDelete, setOpenDelete] = useState(false);
   const [openDelete1, setOpenDelete1] = useState(false);
-
+  const [userFollowing, setUserFollowing] = useState<any[]>([]);
+  useEffect(() => {
+    handleFollowState();
+  }, []);
+  async function handleFollowState() {
+    getUserFollowingList().then((res: any) => {
+      setUserFollowing(res);
+    });
+  }
   function handleRemoveFavorite(id: string) {
     setError("");
     setSuccess("");
@@ -93,6 +103,22 @@ const SavedArticlesList = ({
         toast.success(res.success);
         router.refresh();
       }
+    });
+  }
+  function handleFollowAuthor(articleUserId: string) {
+    startTransition(() => {
+      if (!user?.id) return;
+      toggleFollowAuthor(articleUserId, user.id).then((res) => {
+        if (res.error) {
+          toast.error(res.error);
+          router.refresh();
+        }
+        if (res.success) {
+          handleFollowState();
+          toast.success(res.success);
+          router.refresh();
+        }
+      });
     });
   }
   return (
@@ -358,8 +384,17 @@ const SavedArticlesList = ({
                       <DropdownMenuSeparator />
                       <DropdownMenuGroup>
                         <DropdownMenuItem>
-                          <span className="hover:cursor-pointer ">
-                            Follow author
+                          <span
+                            className="hover:cursor-pointer "
+                            onClick={() =>
+                              handleFollowAuthor(favArticle.userId)
+                            }
+                          >
+                            {userFollowing.some(
+                              (follow: any) => follow.id === favArticle.id
+                            )
+                              ? "Unfollow author"
+                              : "Follow author"}{" "}
                           </span>
                         </DropdownMenuItem>
                       </DropdownMenuGroup>
@@ -483,41 +518,6 @@ const SavedArticlesList = ({
                     ·{" "}
                     {moment(lastArticle.article.updatedAt).format("MMM D YYYY")}
                   </span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger>
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <MoreHorizontal className="size-5" />
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <div className="flex items-center gap-3 text-sm">
-                              More
-                            </div>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-56">
-                      <DropdownMenuGroup>
-                        <DropdownMenuItem onClick={() => {}}>
-                          <span className="hover:cursor-pointer text-destructive">
-                            gfgfgfgfgf
-                          </span>
-                        </DropdownMenuItem>
-                      </DropdownMenuGroup>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuGroup>
-                        <DropdownMenuItem>
-                          <span className="hover:cursor-pointer ">
-                            Follow author
-                          </span>
-                        </DropdownMenuItem>
-                      </DropdownMenuGroup>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
                 </div>
               </CardFooter>
             </Card>

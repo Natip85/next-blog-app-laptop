@@ -1,7 +1,6 @@
 "use client";
 
 import { MoreHorizontal, User2 } from "lucide-react";
-import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardFooter } from "../ui/card";
 import {
@@ -28,6 +27,7 @@ import { toggleFollowAuthor } from "@/actions/toggleFollowAuthor";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { getUserFollowingList } from "@/actions/getUserFollowingList";
 
 interface FollowingListProps {
   allFollowing: any;
@@ -36,7 +36,7 @@ const FollowingList = ({ allFollowing }: FollowingListProps) => {
   const user = useCurrentUser();
   const router = useRouter();
   const [userFavorites, setUserFavorites] = useState<any[]>([]);
-  const [isFollowing, setIsFollowing] = useState(true);
+  const [userFollowing, setUserFollowing] = useState<any[]>([]);
   const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
@@ -44,16 +44,23 @@ const FollowingList = ({ allFollowing }: FollowingListProps) => {
       setUserFavorites(favorites);
     });
   }, []);
+  useEffect(() => {
+    handleFollowState();
+  }, []);
+  async function handleFollowState() {
+    getUserFollowingList().then((res: any) => {
+      setUserFollowing(res);
+    });
+  }
   function handleFollowAuthor(articleUserId: string) {
-    setIsFollowing(!isFollowing);
     startTransition(() => {
       if (!user?.id) return;
       toggleFollowAuthor(articleUserId, user.id).then((res) => {
-        if (res?.error) {
+        if (res.error) {
           toast.error(res.error);
         }
-        if (res?.success) {
-          toast.success(isFollowing ? "Unfollowed author" : "Following author");
+        if (res.success) {
+          toast.success(res.success);
           router.refresh();
         }
       });
@@ -208,7 +215,11 @@ const FollowingList = ({ allFollowing }: FollowingListProps) => {
                       onClick={() => handleFollowAuthor(article.userId)}
                     >
                       <span className="hover:cursor-pointer">
-                        Follow author
+                        {userFollowing.some(
+                          (follow: any) => follow.id === article.id
+                        )
+                          ? "Unfollow author"
+                          : "Follow author"}{" "}
                       </span>
                     </DropdownMenuItem>
                   </DropdownMenuGroup>

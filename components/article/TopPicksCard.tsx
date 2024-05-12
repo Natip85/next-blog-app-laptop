@@ -11,7 +11,7 @@ interface TopPicksCardProps {
 }
 const TopPicksCard = ({ articles }: TopPicksCardProps) => {
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-3">
       {articles.map((article: any) => (
         <Link key={article.id} href={`/article-details/${article.id}`}>
           <Card className="w-full border-0 shadow-none">
@@ -53,6 +53,7 @@ const TopPicksCard = ({ articles }: TopPicksCardProps) => {
         <Button
           asChild
           variant={"link"}
+          size={"xs"}
           className="p-0 text-green-600 hover:text-black hover:no-underline"
         >
           <Link href={"#"} className="text-xs">

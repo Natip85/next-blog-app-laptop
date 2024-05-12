@@ -32,11 +32,13 @@ export default async function FeedPage() {
         </Tabs>
       </div>
       <div className=" w-1/3 border-l-[1px] p-5 hidden md:block">
-        <div className="md:sticky md:top-0 pt-16">
-          <h3 className="text-sm font-semibold mb-5">Top picks</h3>
+        <div className="md:sticky md:top-0 pt-14">
+          <h3 className="text-sm font-semibold mb-3">Top picks</h3>
           <div>
             <TopPicksCard articles={topPicks} />
           </div>
+          <h3 className="text-sm font-semibold mt-10 mb-3">Who to follow</h3>
+          <div>{/* <WhoToFollow articles={topPicks} /> */}</div>
         </div>
       </div>
     </div>
