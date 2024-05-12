@@ -165,11 +165,10 @@ const ProfilePage = () => {
                         We’re sorry to see you go. Once your account is deleted,
                         all of your content will be permanently gone, including
                         your profile, stories, publications, notes, and
-                        responses. Deleting your Medium account will not delete
-                        any Stripe account you have connected to your Medium
-                        account. If you’re not sure about that, we suggest you
-                        deactivate or submit a request at help.medium.com
-                        instead.
+                        responses. Deleting your account will not delete any
+                        Stripe account you have connected to your account. If
+                        you’re not sure about that, we suggest you deactivate or
+                        submit a request at help.com instead.
                       </div>
                       <Separator />
                       <div className="flex justify-end gap-5">

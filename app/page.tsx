@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="pb-[2000px]">
+    <div className="h-screen">
       <div className="backdrop-blur-lg sticky top-0 border-b-[1.5px] border-black">
         <Nav>
           <div className="flex items-center">
@@ -33,8 +33,8 @@ export default function Home() {
         </Nav>
       </div>
 
-      <section className="bg-yellow-500 border-black border-b-[1.5px]">
-        <div className="container max-w-6xl ">
+      <section className="h-[90vh] bg-yellow-500 border-black border-b-[1.5px] -mt-[3rem]">
+        <div className="container max-w-6xl h-full flex flex-col justify-center">
           <div className="flex flex-col justify-between gap-5 py-20">
             <h1 className="text-6xl sm:text-7xl lg:text-8xl tracking-tighter">
               Human stories <br />
@@ -51,7 +51,13 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <div className="container max-w-6xl">hthththgtgt</div>
+      <div className="flex items-center justify-center gap-3 p-4">
+        <div className="text-sm text-muted-foreground">About</div>
+        <div className="text-sm text-muted-foreground">Help</div>
+        <div className="text-sm text-muted-foreground">Blog</div>
+        <div className="text-sm text-muted-foreground">Careers</div>
+        <div className="text-sm text-muted-foreground">Terms</div>
+      </div>
     </div>
   );
 }

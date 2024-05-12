@@ -169,8 +169,8 @@ const PublishArticleForm = ({
               className="text-xs text-muted-foreground"
             >
               <span className="font-bold">Note:</span> Changes here will affect
-              how your story appears in public places like Medium’s homepage and
-              in subscribers’ inboxes — not the contents of the story itself.
+              how your story appears in public places like the homepage and in
+              subscribers’ inboxes — not the contents of the story itself.
             </label>
           </div>
         </div>
