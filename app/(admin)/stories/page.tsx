@@ -4,10 +4,13 @@ import Link from "next/link";
 import StoriesList from "@/components/article/StoriesList";
 import TopPicksCard from "@/components/article/TopPicksCard";
 import { getTopPicks } from "@/actions/getTopPicks";
+import WhoToFollow from "@/components/article/WhoToFollow";
+import { getWhoToFollow } from "@/actions/getWhoToFollow";
 
 const StoriesPage = async () => {
-  const [articles, topPicks] =
-    (await Promise.all([getUserArticles(), getTopPicks()])) || null;
+  const [articles, topPicks, allWhoToFollow] =
+    (await Promise.all([getUserArticles(), getTopPicks(), getWhoToFollow()])) ||
+    null;
   return (
     <div className="container max-w-7xl flex justify-between gap-10">
       <div className="w-full sm:w-2/3 p-5">
@@ -29,6 +32,10 @@ const StoriesPage = async () => {
           <h3 className="text-sm font-semibold mb-5">Top picks</h3>
           <div>
             <TopPicksCard articles={topPicks} />
+          </div>
+          <h3 className="text-sm font-semibold mt-10 mb-3">Who to follow</h3>
+          <div>
+            <WhoToFollow articles={allWhoToFollow} />
           </div>
         </div>
       </div>

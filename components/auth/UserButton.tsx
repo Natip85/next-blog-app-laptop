@@ -71,17 +71,17 @@ const UserButton = () => {
           </Link>
         </DropdownMenuItem>
         <Separator className="my-3" />
-        <LogoutButton>
-          <DropdownMenuItem className="hover:cursor-pointer flex flex-col items-start">
-            <div className="flex items-center mb-3">
+        <DropdownMenuItem className="w-full flex flex-col items-start">
+          <LogoutButton>
+            <div className="flex items-center mb-3 hover:cursor-pointer w-full">
               <LogOut className="size-4 mr-2" />
               Sign out
             </div>
             <div className="text-xs">
               {maskEmail(user?.email || "email not available")}
             </div>
-          </DropdownMenuItem>
-        </LogoutButton>
+          </LogoutButton>
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

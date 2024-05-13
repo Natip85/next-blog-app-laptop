@@ -1,4 +1,3 @@
-"use client";
 import { logout } from "@/actions/logout";
 // import { signOut } from "next-auth/react";
 import React from "react";
@@ -14,7 +13,7 @@ const LogoutButton = ({ children }: LogoutButtonProps) => {
     // signOut()
   };
   return (
-    <span onClick={onClick} className="cursor-pointer">
+    <span onClick={onClick} className="cursor-pointer w-full">
       {children}
     </span>
   );

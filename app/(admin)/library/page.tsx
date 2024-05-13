@@ -2,18 +2,22 @@ import { getReadingHistory } from "@/actions/getReadingHistory";
 import { getTopPicks } from "@/actions/getTopPicks";
 import { getUserArticles } from "@/actions/getUserArticles";
 import { getUserFavorites } from "@/actions/getUserFavorites";
+import { getWhoToFollow } from "@/actions/getWhoToFollow";
 import SavedArticlesList from "@/components/article/SavedArticlesList";
 import TopPicksCard from "@/components/article/TopPicksCard";
+import WhoToFollow from "@/components/article/WhoToFollow";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 const LibraryPage = async () => {
-  const [articles, favorites, history, topPicks] = await Promise.all([
-    getUserArticles(),
-    getUserFavorites(),
-    getReadingHistory(),
-    getTopPicks(),
-  ]);
+  const [articles, favorites, history, topPicks, allWhoToFollow] =
+    await Promise.all([
+      getUserArticles(),
+      getUserFavorites(),
+      getReadingHistory(),
+      getTopPicks(),
+      getWhoToFollow(),
+    ]);
   return (
     <div className="container max-w-7xl flex justify-between gap-10">
       <div className="w-full sm:w-2/3 p-5">
@@ -40,6 +44,10 @@ const LibraryPage = async () => {
           <h3 className="text-sm font-semibold mb-5">Top picks</h3>
           <div>
             <TopPicksCard articles={topPicks} />
+          </div>
+          <h3 className="text-sm font-semibold mt-10 mb-3">Who to follow</h3>
+          <div>
+            <WhoToFollow articles={allWhoToFollow} />
           </div>
         </div>
       </div>
