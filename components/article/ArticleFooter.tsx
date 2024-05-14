@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { toggleFollowAuthor } from "@/actions/toggleFollowAuthor";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { toast } from "sonner";
+import Link from "next/link";
 
 const ArticleFooter = ({ article }: ArticleWithUser) => {
   const user = useCurrentUser();
@@ -39,17 +40,21 @@ const ArticleFooter = ({ article }: ArticleWithUser) => {
   return (
     <div className="bg-gray-100 sm:p-20 p-5">
       <div className="sm:container sm:max-w-3xl flex flex-col gap-10">
-        <Avatar className="size-20">
-          <AvatarImage src={article?.user?.image} />
-          <AvatarFallback className="bg-green-600">
-            <User2 className="text-white size-10" />
-          </AvatarFallback>
-        </Avatar>
+        <Link href={`/profile/${article.user.id}`}>
+          <Avatar className="size-20">
+            <AvatarImage src={article?.user?.image} />
+            <AvatarFallback className="bg-green-600">
+              <User2 className="text-white size-10" />
+            </AvatarFallback>
+          </Avatar>
+        </Link>
         <div>
           <div className="flex items-center justify-between">
-            <h3 className="text-sm md:text-lg font-semibold">
-              Written by {article.user.name}
-            </h3>
+            <Link href={`/profile/${article.user.id}`}>
+              <h3 className="text-sm md:text-lg font-semibold">
+                Written by {article.user.name}
+              </h3>
+            </Link>
             <div className="flex items-center gap-3">
               <Button
                 onClick={handleFollowAuthor}
@@ -69,7 +74,9 @@ const ArticleFooter = ({ article }: ArticleWithUser) => {
             </div>
           </div>
 
-          <div className="text-sm">5.3k followers</div>
+          <div className="text-sm">
+            {article.user.followers.length} Followers
+          </div>
         </div>
         <div className="text-sm">{article.user.bio}</div>
         <Separator className="my-5" />

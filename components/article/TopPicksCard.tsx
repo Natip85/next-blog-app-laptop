@@ -11,11 +11,11 @@ interface TopPicksCardProps {
 }
 const TopPicksCard = ({ articles }: TopPicksCardProps) => {
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-2">
       {articles.map((article: any) => (
-        <Link key={article.id} href={`/article-details/${article.id}`}>
-          <Card className="w-full border-0 shadow-none">
-            <CardContent className="w-full p-0">
+        <Card key={article.id} className="w-full border-0 shadow-none">
+          <CardContent className="w-full p-0 flex flex-col gap-1">
+            <Link href={`/profile/${article.user.id}`}>
               <div className="flex items-center gap-2">
                 <Avatar className="size-5">
                   <AvatarImage src={article.user.image} />
@@ -28,7 +28,9 @@ const TopPicksCard = ({ articles }: TopPicksCardProps) => {
                   {article.user.name}
                 </span>
               </div>
-              <div>
+            </Link>
+            <div>
+              <Link href={`/article-details/${article.id}`}>
                 {(article?.editorData as any)?.blocks.map(
                   (item: any, index: number) => {
                     if (item.type === "header") {
@@ -44,10 +46,10 @@ const TopPicksCard = ({ articles }: TopPicksCardProps) => {
                     }
                   }
                 )}
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
       ))}
       <div>
         <Button

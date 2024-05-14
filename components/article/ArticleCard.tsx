@@ -112,14 +112,21 @@ const ArticleCard = ({ articles }: ArticleCardProps) => {
             <CardContent className="p-5">
               <div className="flex items-center gap-2 mb-3">
                 <div>
-                  <Avatar>
-                    <AvatarImage src={article?.user?.image} />
-                    <AvatarFallback className="bg-green-600">
-                      <User2 />
-                    </AvatarFallback>
-                  </Avatar>
+                  <Link href={`/profile/${article.user.id}`}>
+                    {" "}
+                    <Avatar>
+                      <AvatarImage src={article?.user?.image} />
+                      <AvatarFallback className="bg-green-600">
+                        <User2 />
+                      </AvatarFallback>
+                    </Avatar>
+                  </Link>
                 </div>
-                <div className="font-medium">{article?.user?.name}</div>
+                <div className="font-medium">
+                  <Link href={`/profile/${article.user.id}`}>
+                    {article?.user?.name}
+                  </Link>
+                </div>
                 <div className="text-xs text-muted-foreground">
                   · {moment(article.updatedAt).format("MMM D YYYY")}
                 </div>

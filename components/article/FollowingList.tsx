@@ -76,14 +76,18 @@ const FollowingList = ({ allFollowing }: FollowingListProps) => {
           <CardContent className="p-5">
             <div className="flex items-center gap-2 mb-3">
               <div>
-                <Avatar>
-                  <AvatarImage src={article?.user?.image} />
-                  <AvatarFallback className="bg-green-600">
-                    <User2 />
-                  </AvatarFallback>
-                </Avatar>
+                <Link href={`/profile/${article.user.id}`}>
+                  <Avatar>
+                    <AvatarImage src={article?.user?.image} />
+                    <AvatarFallback className="bg-green-600">
+                      <User2 />
+                    </AvatarFallback>
+                  </Avatar>
+                </Link>
               </div>
-              <div className="font-medium">{article?.user?.name}</div>
+              <Link href={`/profile/${article.user.id}`}>
+                <div className="font-medium">{article?.user?.name}</div>
+              </Link>
               <div className="text-xs text-muted-foreground">
                 · {moment(article.updatedAt).format("MMM D YYYY")}
               </div>

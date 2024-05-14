@@ -15,7 +15,6 @@ interface WhoToFollowProps {
   articles: any;
 }
 const WhoToFollow = ({ articles }: WhoToFollowProps) => {
-  console.log({ articles });
   const router = useRouter();
   const user = useCurrentUser();
   const [isPending, startTransition] = useTransition();
@@ -38,7 +37,7 @@ const WhoToFollow = ({ articles }: WhoToFollowProps) => {
       {articles.map((article: any) => (
         <Card key={article.id} className="w-full border-0 shadow-none">
           <CardContent className="w-full p-0 flex items-center justify-between gap-3">
-            <Link href={`#`}>
+            <Link href={`/profile/${article.id}`}>
               <div className="flex items-center justify-between gap-2">
                 <Avatar className="size-8 self-start">
                   <AvatarImage src={article.image} />

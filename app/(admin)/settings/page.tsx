@@ -1,6 +1,16 @@
 "use client";
 import * as z from "zod";
-import { profile } from "@/actions/profile";
+import ProfileEditForm from "@/components/auth/ProfileEditForm";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -11,11 +21,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { ProfileSchema } from "@/validations";
-import { useState, useTransition } from "react";
-import { useCurrentUser } from "@/hooks/useCurrentUser";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Select,
   SelectContent,
@@ -23,35 +28,29 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { UserRole } from "@prisma/client";
-import { Switch } from "@/components/ui/switch";
-import { Button } from "@/components/ui/button";
-import { useSession } from "next-auth/react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
-import { toast } from "sonner";
+import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { User2 } from "lucide-react";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import ProfileEditForm from "@/components/auth/ProfileEditForm";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useForm } from "react-hook-form";
+import { ProfileSchema } from "@/validations";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState, useTransition } from "react";
+import { profile } from "@/actions/profile";
+import { toast } from "sonner";
+import { useSession } from "next-auth/react";
 import axios from "axios";
-import { useRouter } from "next/navigation";
 import { logout } from "@/actions/logout";
+import { UserRole } from "@prisma/client";
 
-const ProfilePage = () => {
+const SettingsPage = () => {
   const user = useCurrentUser();
-  const router = useRouter();
-  const { update } = useSession();
   const [isPending, startTransition] = useTransition();
+  const { update } = useSession();
   const [open, setOpen] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
+
   const form = useForm<z.infer<typeof ProfileSchema>>({
     resolver: zodResolver(ProfileSchema),
     defaultValues: {
@@ -78,11 +77,9 @@ const ProfilePage = () => {
         .catch(() => toast.error("Something went wrong"));
     });
   };
-
   const handleOpenDialog = () => {
     setOpen(!open);
   };
-
   const handleDeleteAccount = async (id: string) => {
     await axios.delete(`/api/auth/delete/${id}`).then((res) => {
       if (res.status === 200) {
@@ -94,21 +91,15 @@ const ProfilePage = () => {
   return (
     <div className="container max-w-7xl flex justify-between gap-10">
       <div className="w-full sm:w-2/3 p-5">
-        <h1 className="text-3xl sm:text-5xl font-semibold my-10">
-          {user?.name}
-        </h1>
+        <h1 className="text-3xl sm:text-5xl font-semibold my-10">Settings</h1>
         <Form {...form}>
           <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
-            <Tabs defaultValue="about">
+            <Tabs defaultValue="account">
               <TabsList className="bg-transparent">
-                <TabsTrigger value="about">About</TabsTrigger>
                 <TabsTrigger value="account">Account</TabsTrigger>
                 <TabsTrigger value="security">Security</TabsTrigger>
               </TabsList>
               <Separator className="-mt-1" />
-              <TabsContent value="about">
-                Make changes to your about here.
-              </TabsContent>
               <TabsContent value="account">
                 <div className="space-y-4 px-4 py-4">
                   <Dialog open={open} onOpenChange={setOpen}>
@@ -324,41 +315,12 @@ const ProfilePage = () => {
         </Form>
       </div>
       <div className="hidden sm:flex flex-col h-screen flex-1 border-l p-5">
-        <span>
-          {user?.image ? (
-            <Avatar className="size-32">
-              <AvatarImage src={user?.image || ""} />
-              <AvatarFallback className="bg-amber-500">
-                <User2 className="text-white" />
-              </AvatarFallback>
-            </Avatar>
-          ) : (
-            <div className="bg-amber-400 rounded-full size-24 flex justify-center items-center">
-              <User2 className="rounded-full" size={75} />
-            </div>
-          )}
-        </span>
-        <h3 className="font-semibold my-5">{user?.name}</h3>
-        <p className="text-sm text-muted-foreground">{user?.bio}</p>
-        <div>
-          <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger
-              className="w-fit p-0 hover:bg-transparent text-green-600 hover:text-gray-900"
-              asChild
-            >
-              <Button variant={"ghost"}>Edit profile</Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogTitle className="text-center">
-                Profile information
-              </DialogTitle>
-              <ProfileEditForm closeDialog={handleOpenDialog} />
-            </DialogContent>
-          </Dialog>
-        </div>
+        <h3 className="text-base font-bold my-10 text-center">
+          Suggested help articles
+        </h3>
       </div>
     </div>
   );
 };
 
-export default ProfilePage;
+export default SettingsPage;

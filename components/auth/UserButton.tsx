@@ -45,7 +45,7 @@ const UserButton = () => {
         className="w-[250px] flex flex-col p-2 gap-2"
       >
         <DropdownMenuItem className="gap-2 hover:cursor-pointer" asChild>
-          <Link href={"/profile"}>
+          <Link href={`/profile/${user?.id}`}>
             <User2 className="size-4" /> Profile
           </Link>
         </DropdownMenuItem>
@@ -61,7 +61,7 @@ const UserButton = () => {
         </DropdownMenuItem>
         <Separator className="my-3" />
         <DropdownMenuItem className="gap-2 hover:cursor-pointer" asChild>
-          <Link href={"#"}>
+          <Link href={"/settings"}>
             <Settings className="size-4" /> Settings
           </Link>
         </DropdownMenuItem>
