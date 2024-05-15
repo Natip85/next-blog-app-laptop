@@ -22,7 +22,6 @@ interface UserProfileFormProps {
   dbUser: any;
 }
 const UserProfileForm = ({ dbUser }: UserProfileFormProps) => {
-  console.log({ dbUser });
   const user = useCurrentUser();
   const [isFollowing, setIsFollowing] = useState(false);
   const [open, setOpen] = useState(false);
@@ -167,7 +166,7 @@ const UserProfileForm = ({ dbUser }: UserProfileFormProps) => {
               >
                 <div className="flex items-center justify-between gap-2">
                   <Link href={`/profile/${follower.id}`}>
-                    <Avatar>
+                    <Avatar className="size-5">
                       <AvatarImage src={follower.image} />
                       <AvatarFallback className="bg-green-600">
                         <User2 />
@@ -185,7 +184,36 @@ const UserProfileForm = ({ dbUser }: UserProfileFormProps) => {
                     <MoreHorizontal />
                   </PopoverTrigger>
                   <PopoverContent>
-                    Place content for the popover here.
+                    <div className="flex items-center gap-2">
+                      <Link href={`/profile/${follower.id}`}>
+                        <Avatar className="size-10">
+                          <AvatarImage src={follower.image} />
+                          <AvatarFallback className="bg-green-600">
+                            <User2 />
+                          </AvatarFallback>
+                        </Avatar>
+                      </Link>
+                      <span className="font-semibold text-xl">
+                        <Link href={`/profile/${follower.id}`}>
+                          {follower.name}
+                        </Link>
+                      </span>
+                    </div>
+                    <div className="text-xs text-muted-foreground my-2">
+                      {follower.bio}
+                    </div>
+                    <Separator />
+                    <div className="pt-2 flex items-center justify-between gap-2">
+                      <span className="text-sm text-muted-foreground">
+                        {follower.followers.length} Followers
+                      </span>
+                      <Button
+                        size={"xs"}
+                        className="bg-green-600 hover:bg-green-700 text-white text-sm rounded-3xl"
+                      >
+                        Follow
+                      </Button>
+                    </div>
                   </PopoverContent>
                 </Popover>
               </div>

@@ -15,6 +15,7 @@ export const getUserById = async (userId: string) => {
     });
 
     if (!foundUser) return null;
+
     const followingIds = foundUser.following.map(
       (follow) => follow.followedById
     );
@@ -23,9 +24,13 @@ export const getUserById = async (userId: string) => {
       where: {
         id: { in: followingIds },
       },
+      include: { following: true, followers: true },
     });
 
-    return { foundUser, followingUsers };
+    return {
+      foundUser,
+      followingUsers,
+    };
   } catch (error) {
     return { error: "Error finding user" };
   }
