@@ -9,12 +9,23 @@ export const getUserById = async (userId: string) => {
     return { error: "No user found" };
   }
   try {
-    const user = db.user.findUnique({
+    const foundUser = await db.user.findUnique({
       where: { id: userId },
-      include: { followers: true },
+      include: { followers: true, following: true },
     });
-    if (!user) return null;
-    return user;
+
+    if (!foundUser) return null;
+    const followingIds = foundUser.following.map(
+      (follow) => follow.followedById
+    );
+
+    const followingUsers = await db.user.findMany({
+      where: {
+        id: { in: followingIds },
+      },
+    });
+
+    return { foundUser, followingUsers };
   } catch (error) {
     return { error: "Error finding user" };
   }
