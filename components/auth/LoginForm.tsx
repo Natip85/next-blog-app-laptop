@@ -20,6 +20,12 @@ import FormError from "../FormError";
 import FormSuccess from "../FormSuccess";
 import { useRouter, useSearchParams } from "next/navigation";
 import { login } from "@/actions/login";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from "../ui/input-otp";
 
 const LoginForm = () => {
   const router = useRouter();
@@ -83,11 +89,24 @@ const LoginForm = () => {
                   <FormItem>
                     <FormLabel>Two Factor Code</FormLabel>
                     <FormControl>
-                      <Input
+                      {/* <Input
                         {...field}
                         disabled={isPending}
                         placeholder="123456"
-                      />
+                      /> */}
+                      <InputOTP maxLength={6} {...field}>
+                        <InputOTPGroup>
+                          <InputOTPSlot index={0} />
+                          <InputOTPSlot index={1} />
+                          <InputOTPSlot index={2} />
+                        </InputOTPGroup>
+                        <InputOTPSeparator />
+                        <InputOTPGroup>
+                          <InputOTPSlot index={3} />
+                          <InputOTPSlot index={4} />
+                          <InputOTPSlot index={5} />
+                        </InputOTPGroup>
+                      </InputOTP>
                     </FormControl>
                     <FormMessage />
                   </FormItem>

@@ -8,8 +8,9 @@ import { auth } from "@/auth";
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-  title: "next-blog",
+  title: "Yarcone",
   description: "An always-free blog site",
+  icons: { icon: "/sound-waves.png" },
 };
 export default async function RootLayout({
   children,
