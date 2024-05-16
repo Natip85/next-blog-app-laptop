@@ -11,7 +11,7 @@ export const getUserById = async (userId: string) => {
   try {
     const foundUser = await db.user.findUnique({
       where: { id: userId },
-      include: { followers: true, following: true },
+      include: { followers: true, following: true, articles: true },
     });
 
     if (!foundUser) return null;
